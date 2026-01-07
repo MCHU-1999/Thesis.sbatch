@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.sbatch": "shellscript",
+        "*.slurm": "shellscript"
+    }
+}
