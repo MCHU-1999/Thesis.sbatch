@@ -20,7 +20,7 @@ SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
 DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
 GEO_DATA_PATH=${MY_STORAGE}/PGSR/output_tnt/Barn/test/train/ours_30000
 
-echo "--- Starting PGSR Training Job ---"
+echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
 echo "Running Dataset: TnT"
 
@@ -48,7 +48,7 @@ srun apptainer exec \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/PGSR/bin/python run_demo_tnt_pgsr.py \
+    /opt/conda/envs/planarSplatting/bin/python run_demo_tnt_pgsr.py \
         --data_path ${DATA_PATH} \
         --geo_data_path ${GEO_DATA_PATH}
 
