@@ -11,6 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -78,14 +79,21 @@ class FileDownloader:
             self.driver.get(url)
             
             # Wait for page to load
+            print("Waiting for Synology Desktop to load...")
             WebDriverWait(self.driver, wait_timeout).until(
-                EC.presence_of_element_located((By.TAG_NAME, "body"))
+                EC.presence_of_element_located((By.XPATH, "//*[@id='sds-desktop']"))
             )
             
             # Take screenshot before clicking (for debugging)
             screenshot_path = os.path.join(self.download_dir, "before_download.png")
             self.driver.save_screenshot(screenshot_path)
             print(f"Screenshot saved: {screenshot_path}")
+
+            # Press ESC to dismiss any potential popups or overlays
+            print("Pressing ESC to dismiss any popups...")
+            body = self.driver.find_element(By.TAG_NAME, "body")
+            body.send_keys(Keys.ESCAPE)
+            time.sleep(2)  # Wait a moment after pressing ESC
             
             # Find and click download button
             print(f"Looking for download button with XPath: {download_btn_xpath}")
