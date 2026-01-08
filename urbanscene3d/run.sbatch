@@ -24,7 +24,6 @@ echo "Running Dataset: TnT"
 # --- Command ---
 echo "Running command for downloading VCC dataset..."
 srun apptainer exec \
-    --nv \
     --containall \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
