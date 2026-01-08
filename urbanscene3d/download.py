@@ -13,10 +13,11 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from pyvirtualdisplay import Display
 
 
 class FileDownloader:
-    def __init__(self, download_dir=None, headless=True, chromedriver_path=None):
+    def __init__(self, download_dir=None, headless=True, chromedriver_path=None, use_virtual_display=False):
         """
         Initialize the file downloader
         
@@ -28,12 +29,29 @@ class FileDownloader:
         self.headless = headless
         self.driver = None
         self.chromedriver_path = chromedriver_path
+        self.use_virtual_display = use_virtual_display
+        self.virtual_display = None
         
         # Ensure download directory exists
         os.makedirs(self.download_dir, exist_ok=True)
     
     def setup_driver(self):
         """Setup Chrome driver with appropriate options"""
+
+        # Start virtual display if requested
+        if self.use_virtual_display:
+            try:
+                print("Starting virtual display...")
+                self.virtual_display = Display(visible=0, size=(1920, 1080))
+                self.virtual_display.start()
+                print("Virtual display started successfully!")
+                # Don't use headless when we have virtual display
+                self.headless = False
+            except Exception as e:
+                print(f"Failed to start virtual display: {e}")
+                print("Falling back to headless mode...")
+                self.headless = True
+        
         chrome_options = Options()
         
         # Set download preferences
@@ -304,10 +322,18 @@ class FileDownloader:
         return False
     
     def close(self):
-        """Close the browser driver"""
+        """Close the browser driver and virtual display"""
         if self.driver:
             self.driver.quit()
             print("Browser closed")
+        
+        # Stop virtual display
+        if self.virtual_display:
+            try:
+                self.virtual_display.stop()
+                print("Virtual display stopped")
+            except Exception as e:
+                print(f"Error stopping virtual display: {e}")
 
 
 def main():
@@ -323,9 +349,16 @@ def main():
     # Driver path
     CD_PATH = "/Users/mchu/Documents/TUD/Thesis/scripts/urbanscene3d/chromedriver"
     
+    # Detect HPC environment
+    is_hpc = 'SLURM_JOB_ID' in os.environ or 'DISPLAY' not in os.environ
+    
     # Create downloader instance
-    # downloader = FileDownloader(download_dir=DOWNLOAD_DIR, headless=False, chromedriver_path=CD_PATH)
-    downloader = FileDownloader(download_dir=DOWNLOAD_DIR, headless=True, chromedriver_path=None)
+    downloader = FileDownloader(
+        download_dir=DOWNLOAD_DIR, 
+        headless=not is_hpc,  # Use headless locally, virtual display on HPC
+        use_virtual_display=is_hpc,  # Enable virtual display for HPC
+        chromedriver_path=None
+    )
     
     try:
         # Download the file
@@ -334,7 +367,6 @@ def main():
             download_btn_xpath=DOWNLOAD_BUTTON_XPATH,
             wait_timeout=90
         )
-        
         if success:
             # Wait for download to complete
             downloader.wait_for_download_completion(timeout=7200)  # 2 hours timeout
