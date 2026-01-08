@@ -262,7 +262,7 @@ class FileDownloader:
                         self.monitor_download_progress()
                         return True
                     
-                    print("Waiting for download to start...")
+                    # print("Waiting for download to start...")
                     time.sleep(5)
                     
             except KeyboardInterrupt:
@@ -296,9 +296,12 @@ class FileDownloader:
 def main():
     """Main function to demonstrate usage"""
     # Configuration
-    DOWNLOAD_URL = "https://your-synology-nas-url.com/path/to/file"  # Replace with actual URL
-    DOWNLOAD_DIR = "/path/to/your/download/directory"  # Replace with your desired path
-    DOWNLOAD_BUTTON_XPATH = "//*[@id='ext-comp-1038']"  # The XPath you provided
+    # Replace with actual URL
+    DOWNLOAD_URL = "https://syn4-rs3yjlbkqq3nv33cc6bsalm25e-103-40-249-227.szuvccnas.direct.quickconnect.to:5001/d/s/lT61obCnx48mOc1FrPtUiuZ8eNCOrEQd/27C8eKMNd1YBpLxJTbYY-jMWU7vRHhbs-5bHAJ9227Ag"
+    # Replace with your desired path
+    DOWNLOAD_DIR = "/tudelft.net/staff-umbrella/Deep3D/mingchiehhu" 
+    # The XPath to the download btn
+    DOWNLOAD_BUTTON_XPATH = "//*[@id='ext-comp-1038']"
     
     # Create downloader instance
     downloader = FileDownloader(download_dir=DOWNLOAD_DIR, headless=True)
