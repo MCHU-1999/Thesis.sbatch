@@ -137,7 +137,7 @@ class FileDownloader:
             return False
             
         except TimeoutException:
-            print(f"Timeout: Could not find download button within {wait_timeout} seconds")
+            print(f"TimeoutException: Could not find an element within {wait_timeout} seconds")
             return False
         except NoSuchElementException:
             print("Download button not found")
