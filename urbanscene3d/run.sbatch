@@ -31,3 +31,11 @@ srun apptainer exec \
     /opt/conda/envs/webscraper/bin/python download.py
 
 echo "--- Job finished ---"
+
+# How to ececute in bash
+# apptainer exec \
+#     --containall \
+#     -B /tudelft.net/:/tudelft.net/ \
+#     --pwd /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/runs/urbanscene3d \
+#     /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/containers/web_scraper.sif \
+#     /opt/conda/envs/webscraper/bin/python download.py

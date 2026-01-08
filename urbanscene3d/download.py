@@ -88,7 +88,8 @@ class FileDownloader:
             # Wait for page to load
             print("Waiting for Synology Desktop to load...")
             WebDriverWait(self.driver, wait_timeout).until(
-                EC.presence_of_element_located((By.XPATH, "//*[@id='sds-desktop']"))
+                # EC.presence_of_element_located((By.XPATH, "//*[@id='sds-desktop']"))
+                EC.presence_of_element_located((By.XPATH, "//html/body"))
             )
             
             # Take screenshot before clicking (for debugging)
