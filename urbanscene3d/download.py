@@ -13,11 +13,10 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
-from webdriver_manager.chrome import ChromeDriverManager
 
 
 class FileDownloader:
-    def __init__(self, download_dir=None, headless=True):
+    def __init__(self, download_dir=None, headless=True, chromedriver_path=None):
         """
         Initialize the file downloader
         
@@ -28,6 +27,7 @@ class FileDownloader:
         self.download_dir = download_dir or os.path.join(os.getcwd(), "downloads")
         self.headless = headless
         self.driver = None
+        self.chromedriver_path = chromedriver_path
         
         # Ensure download directory exists
         os.makedirs(self.download_dir, exist_ok=True)
@@ -55,7 +55,14 @@ class FileDownloader:
         chrome_options.add_argument("--window-size=1920,1080")
         
         try:
-            service = Service(ChromeDriverManager().install())
+            if self.chromedriver_path is not None:
+                # Use local ChromeDriver path
+                service = Service(self.chromedriver_path)
+            else:
+                # Or use ChromeDriverManager
+                from webdriver_manager.chrome import ChromeDriverManager
+                service = Service(ChromeDriverManager().install())
+
             self.driver = webdriver.Chrome(service=service, options=chrome_options)
             print(f"Chrome driver initialized. Downloads will be saved to: {self.download_dir}")
         except Exception as e:
@@ -81,7 +88,7 @@ class FileDownloader:
             # Wait for page to load
             print("Waiting for Synology Desktop to load...")
             WebDriverWait(self.driver, wait_timeout).until(
-                EC.presence_of_element_located((By.XPATH, "/html/body/div[4]"))
+                EC.presence_of_element_located((By.XPATH, "//*[@id='sds-desktop']"))
             )
             
             # Take screenshot before clicking (for debugging)
@@ -307,12 +314,16 @@ def main():
     # Replace with actual URL
     DOWNLOAD_URL = "https://syn4-rs3yjlbkqq3nv33cc6bsalm25e-103-40-249-227.szuvccnas.direct.quickconnect.to:5001/d/s/lT61obCnx48mOc1FrPtUiuZ8eNCOrEQd/27C8eKMNd1YBpLxJTbYY-jMWU7vRHhbs-5bHAJ9227Ag"
     # Replace with your desired path
-    DOWNLOAD_DIR = "/tudelft.net/staff-umbrella/Deep3D/mingchiehhu" 
+    DOWNLOAD_DIR = "/tudelft.net/staff-umbrella/Deep3D/mingchiehhu"
+    # DOWNLOAD_DIR = "/Users/mchu/Documents/TUD/Thesis/scripts/urbanscene3d"
     # The XPath to the download btn
     DOWNLOAD_BUTTON_XPATH = "//*[@id='ext-comp-1038']"
+    # Driver path
+    CD_PATH = "/Users/mchu/Documents/TUD/Thesis/scripts/urbanscene3d/chromedriver"
     
     # Create downloader instance
-    downloader = FileDownloader(download_dir=DOWNLOAD_DIR, headless=True)
+    # downloader = FileDownloader(download_dir=DOWNLOAD_DIR, headless=False, chromedriver_path=CD_PATH)
+    downloader = FileDownloader(download_dir=DOWNLOAD_DIR, headless=True, chromedriver_path=None)
     
     try:
         # Download the file
