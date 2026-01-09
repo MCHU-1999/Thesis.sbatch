@@ -18,7 +18,7 @@ MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
 DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
-GEO_DATA_PATH=${MY_STORAGE}/PGSR/output_tnt/Barn/test/train/ours_30000
+GEO_DATA_PATH=${MY_STORAGE}/PGSR/output_tnt_highres/Barn/test/train/ours_30000
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
