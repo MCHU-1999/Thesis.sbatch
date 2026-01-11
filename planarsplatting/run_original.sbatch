@@ -39,6 +39,10 @@ echo "Python version: $(python --version)"
 /usr/bin/nvidia-smi
 ulimit -n 60000
 
+export TORCH_HOME=${MY_STORAGE}/.cache
+export APPTAINERENV_TORCH_HOME=${MY_STORAGE}/.cache
+export APPTAINERENV_LD_LIBRARY_PATH="/usr/lib64:${LD_LIBRARY_PATH}"
+
 # --- Training Command ---
 echo "Running command for TnT..."
 srun apptainer exec \
