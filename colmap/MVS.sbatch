@@ -21,7 +21,7 @@ echo "--- Starting Job ---"
 echo "Loading modules..."
 module purge
 module use /opt/insy/modulefiles
-module load cuda/12.1
+module load cuda/12.4
 module load devtoolset/11
 # module load miniconda/3.11
 
