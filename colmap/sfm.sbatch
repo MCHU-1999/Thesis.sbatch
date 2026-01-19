@@ -5,7 +5,7 @@
 #SBATCH --time=4:00:00       # 4 hours is usually plenty for COLMAP
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8    # Increased CPUs for faster matching
-#SBATCH --mem=64GB           # 32GB is sufficient for conversion
+#SBATCH --mem=32GB           # 32GB is sufficient for conversion
 #SBATCH --mail-type=END
 
 # Set output/error logs
