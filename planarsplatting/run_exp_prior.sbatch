@@ -51,7 +51,8 @@ srun apptainer exec \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/planarSplatting/bin/python run_exp_tnt_prior.py \
-        --data_path ${DATA_PATH} 
+    /opt/conda/envs/planarSplatting/bin/python run_exp.py \
+        --data_path ${DATA_PATH} \
+        --use_precomputed_data
 
 echo "--- Job finished ---"
