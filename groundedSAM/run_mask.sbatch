@@ -10,24 +10,23 @@
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=slurm_tnt_prior_%j.out
-#SBATCH --error=slurm_tnt_prior_%j.err
+#SBATCH --output=slurm_tnt_%j.out
+#SBATCH --error=slurm_tnt_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
-REPO_PATH=${MY_STORAGE}/PlanarSplatting
-SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
-DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
+REPO_PATH=${MY_STORAGE}/runs/groundedSAM
+SIF_PATH=${MY_STORAGE}/containers/grounded_sam.sif
 
-echo "--- Starting PlanarSplatting Training Job ---"
+
+echo "--- Starting grounded_sam mask making job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
-echo "Running Dataset: TnT"
 
 # --- Environment Setup ---
 echo "Loading modules..."
 module purge
 module use /opt/insy/modulefiles
-module load cuda/12.1
+module load cuda/11.8
 module load devtoolset/11
 module load miniconda/3.11
 
@@ -39,20 +38,14 @@ echo "Python version: $(python --version)"
 /usr/bin/nvidia-smi
 ulimit -n 60000
 
-export TORCH_HOME=${MY_STORAGE}/.cache
-export APPTAINERENV_TORCH_HOME=${MY_STORAGE}/.cache
-export APPTAINERENV_LD_LIBRARY_PATH="/usr/lib64:${LD_LIBRARY_PATH}"
-
 # --- Training Command ---
-echo "Running command for TnT..."
+echo "Running training command for TnT..."
 srun apptainer exec \
     --nv \
     --containall \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/planarSplatting/bin/python run_exp_tnt_prior.py \
-        --data_path ${DATA_PATH} \
-        --use_precomputed_data
+    /opt/conda/envs/grounded_sam/bin/python process_masks.py
 
-echo "--- Job finished ---"
+echo "--- Training job finished ---"
