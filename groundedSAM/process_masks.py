@@ -6,6 +6,9 @@ from tqdm import tqdm
 from autodistill_grounded_sam import GroundedSAM
 from autodistill.detection import CaptionOntology
 
+# 1. Force OpenCV to ignore X11/Qt
+os.environ["QT_QPA_PLATFORM"] = "offscreen"
+
 # --- CONFIGURATION ---
 # Replace these with your actual HPC paths
 MY_STORAGE = "/tudelft.net/staff-umbrella/Deep3D/mingchiehhu"
