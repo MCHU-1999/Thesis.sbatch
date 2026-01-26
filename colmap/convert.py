@@ -53,7 +53,6 @@ if not args.skip_matching:
     ## Feature matching
     feat_matching_cmd = colmap_command + " exhaustive_matcher \
         --database_path " + args.source_path + "/distorted/database.db \
-        --FeatureMatching.num_threads 8 \
         --FeatureMatching.use_gpu " + str(use_gpu)
     # feat_matching_cmd = colmap_command + " exhaustive_matcher \
         # --database_path " + args.source_path + "/distorted/database.db"
