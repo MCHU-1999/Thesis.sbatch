@@ -16,7 +16,7 @@ IMAGE_DIR = f"{MY_STORAGE}/TNT_GOF/TrainingSet/Barn/images"
 OUTPUT_DIR = f"{MY_STORAGE}/TNT_GOF/TrainingSet/Barn/masked_images"
 # Define the object and its label
 # Format: {"text prompt to find": "label name"}
-ONTOLOGY = CaptionOntology({"the person": "person"})
+ONTOLOGY = CaptionOntology({"the house in front": "house"})
 
 def main():
     # 1. Ensure output directory exists
