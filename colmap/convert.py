@@ -38,6 +38,7 @@ if not args.skip_matching:
         --ImageReader.single_camera 1 \
         --ImageReader.camera_model " + args.camera + " \
         --ImageReader.mask_path " + args.source_path + "/masks \
+        --SiftExtraction.num_threads 8 \
         --FeatureExtraction.use_gpu " + str(use_gpu)
     # feat_extracton_cmd = colmap_command + " feature_extractor "\
     #     "--database_path " + args.source_path + "/distorted/database.db \
