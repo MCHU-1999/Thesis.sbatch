@@ -19,6 +19,7 @@ REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
 DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
 GEO_DATA_PATH=${MY_STORAGE}/PGSR/output_tnt/Barn/test/train/ours_30000
+INIT_MESH_PATH=${MY_STORAGE}/PGSR/output_tnt/Barn/test/mesh/tsdf_fusion_post.ply
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
@@ -50,6 +51,7 @@ srun apptainer exec \
     ${SIF_PATH} \
     /opt/conda/envs/planarSplatting/bin/python run_exp.py \
         --data_path ${DATA_PATH} \
-        --geo_data_path ${GEO_DATA_PATH}
+        --geo_data_path ${GEO_DATA_PATH} \
+        --init_mesh ${INIT_MESH_PATH}
 
 echo "--- Job finished ---"
