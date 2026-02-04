@@ -37,14 +37,16 @@ if not args.skip_matching:
         --image_path " + args.source_path + "/input \
         --ImageReader.single_camera 1 \
         --ImageReader.camera_model " + args.camera + " \
-        --ImageReader.mask_path " + args.source_path + "/masks \
         --FeatureExtraction.num_threads 8 \
         --FeatureExtraction.use_gpu " + str(use_gpu)
     # feat_extracton_cmd = colmap_command + " feature_extractor "\
     #     "--database_path " + args.source_path + "/distorted/database.db \
     #     --image_path " + args.source_path + "/input \
     #     --ImageReader.single_camera 1 \
-    #     --ImageReader.camera_model " + args.camera
+    #     --ImageReader.camera_model " + args.camera + " \
+    #     --ImageReader.mask_path " + args.source_path + "/masks \
+    #     --FeatureExtraction.num_threads 8 \
+    #     --FeatureExtraction.use_gpu " + str(use_gpu)
     exit_code = os.system(feat_extracton_cmd)
     if exit_code != 0:
         logging.error(f"Feature extraction failed with code {exit_code}. Exiting.")
