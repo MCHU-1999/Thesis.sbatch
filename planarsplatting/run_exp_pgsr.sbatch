@@ -49,7 +49,7 @@ srun apptainer exec \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/planarSplatting/bin/python run_exp_pgsr.py \
+    /opt/conda/envs/planarSplatting/bin/python exp_pgsr.py \
         --data_path ${DATA_PATH} \
         --geo_data_path ${GEO_DATA_PATH} \
         --init_mesh ${INIT_MESH_PATH}
