@@ -70,3 +70,4 @@ if __name__ == "__main__":
 
     # How to run:
     # python dim_check.py ~/mount/Deep3D/mingchiehhu/TNT_GOF/TrainingSet/Barn/images ~/mount/Deep3D/mingchiehhu/PGSR/output_tnt/Barn/test/train/ours_30000/renders_depth ~/mount/Deep3D/mingchiehhu/PGSR/output_tnt/Barn/test/train/ours_30000/renders_normal
+    # python dim_check.py ~/mount/Deep3D/mingchiehhu/TNT_GOF/TrainingSet/Barn/images ~/mount/Deep3D/mingchiehhu/TNT_GOF/TrainingSet/Barn/mono_depth ~/mount/Deep3D/mingchiehhu/TNT_GOF/TrainingSet/Barn/mono_normal
