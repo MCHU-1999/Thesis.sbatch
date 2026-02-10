@@ -45,6 +45,7 @@ export APPTAINERENV_LD_LIBRARY_PATH="/usr/lib64:${LD_LIBRARY_PATH}"
 
 # --- Training Command ---
 echo "Running command for TnT..."
+# With mask
 srun apptainer exec \
     --nv \
     --containall \
@@ -52,6 +53,7 @@ srun apptainer exec \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
     /opt/conda/envs/planarSplatting/bin/python exp_prior.py \
-        --data_path ${DATA_PATH}
+        --data_path ${DATA_PATH} \
+        --use_mask
 
 echo "--- Job finished ---"
