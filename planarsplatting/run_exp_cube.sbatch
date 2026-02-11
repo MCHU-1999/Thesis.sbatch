@@ -2,22 +2,23 @@
 
 #SBATCH --partition=general  # Request partition. Default is 'general'
 #SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
-#SBATCH --time=2:00:00       # Request run time (wall-clock) per job.
+#SBATCH --time=1:00:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
 #SBATCH --cpus-per-task=4    # Request number of CPUs (threads) per task.
-#SBATCH --mem=16GB           # Request memory per node.
+#SBATCH --mem=32GB           # Request memory per node.
 #SBATCH --mail-type=END      # Set mail type to 'END' to receive a mail when the job finishes.
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=slurm_tnt_prior_%j.out
-#SBATCH --error=slurm_tnt_prior_%j.err
+#SBATCH --output=slurm_tnt_pgsr_%j.out
+#SBATCH --error=slurm_tnt_pgsr_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
 DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
+
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
@@ -45,15 +46,15 @@ export APPTAINERENV_LD_LIBRARY_PATH="/usr/lib64:${LD_LIBRARY_PATH}"
 
 # --- Training Command ---
 echo "Running command for TnT..."
-# With mask
 srun apptainer exec \
     --nv \
     --containall \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/planarSplatting/bin/python exp_prior.py \
+    /opt/conda/envs/planarSplatting/bin/python run_exp_dtu.py
         --data_path ${DATA_PATH} \
-        --use_mask
+        --out_path planarSplat_ExpRes/exp_cube \
+        --exp_name Cube
 
 echo "--- Job finished ---"
