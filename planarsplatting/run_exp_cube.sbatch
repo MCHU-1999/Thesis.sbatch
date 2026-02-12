@@ -10,8 +10,8 @@
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=slurm_tnt_pgsr_%j.out
-#SBATCH --error=slurm_tnt_pgsr_%j.err
+#SBATCH --output=slurm_cube_%j.out
+#SBATCH --error=slurm_cube_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
@@ -52,7 +52,7 @@ srun apptainer exec \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/planarSplatting/bin/python run_tnt_prior.py
+    /opt/conda/envs/planarSplatting/bin/python run_tnt_prior.py \
         --data_path ${DATA_PATH} \
         --out_path planarSplat_ExpRes/exp_cube \
         --exp_name Cube
