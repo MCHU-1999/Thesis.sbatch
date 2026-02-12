@@ -5,12 +5,14 @@ from pathlib import Path
 
 
 
-FOLDER1 = "/Users/mchu/Documents/TUD/Thesis/PlanarSplatting/planarSplat_ExpRes/exp_tnt_prior/plane2000_s6_i20000_Barn/maskon/scaled_depth/"
-FOLDER2 = "/Users/mchu/Documents/TUD/Thesis/PlanarSplatting/planarSplat_ExpRes/exp_tnt_prior/plane2000_s6_i20000_Barn/maskon/aligned_depth/"
+FOLDER1 = "/Users/mchu/Documents/TUD/Thesis/PlanarSplatting/planarSplat_ExpRes/exp_tnt_prior/plane4000_s6_i20000_nomask_Barn/mono_depth/"
+FOLDER2 = "/Users/mchu/Documents/TUD/Thesis/PlanarSplatting/planarSplat_ExpRes/exp_tnt_prior/plane4000_s6_i20000_nomask_Barn/scaled_depth/"
+FILE_NAME = "000027.npy"
 
-if __name__ == "__main__":
-    path1 = Path(FOLDER1)
-    path2 = Path(FOLDER2)
+
+def overview_all(folder1: str, folder2: str):
+    path1 = Path(folder1)
+    path2 = Path(folder2)
     
     # Get all .npy files from both folders
     npy_files1 = {f.name: f for f in path1.glob("*.npy")}
@@ -101,3 +103,115 @@ if __name__ == "__main__":
         
         plt.tight_layout()
         plt.show()
+
+def compare_one(folder1: str, folder2: str, filename: str):
+    file1 = os.path.join(folder1, filename)
+    file2 = os.path.join(folder2, filename)
+    
+    # Check if files exist
+    if not os.path.exists(file1):
+        print(f"File not found: {file1}")
+        return
+    if not os.path.exists(file2):
+        print(f"File not found: {file2}")
+        return
+    
+    try:
+        # Load both depth maps
+        depth1 = np.load(file1)
+        depth2 = np.load(file2)
+        depth1 = np.clip(depth1, 0, 300)
+        depth2 = np.clip(depth2, 0, 300)
+        
+        print(f"Comparing: {filename}")
+        print(f"File 1 shape: {depth1.shape}, File 2 shape: {depth2.shape}")
+        
+        # Handle 3D arrays
+        if depth1.ndim == 3:
+            depth1 = depth1[:, :, 0]
+            print("Using first channel of 3D array from file 1")
+        if depth2.ndim == 3:
+            depth2 = depth2[:, :, 0]
+            print("Using first channel of 3D array from file 2")
+        
+        # Check shapes match
+        if depth1.shape != depth2.shape:
+            print(f"Shape mismatch: {depth1.shape} vs {depth2.shape}")
+            return
+        
+        # Calculate difference and metrics
+        difference = depth1 - depth2
+        abs_difference = np.abs(difference)
+        
+        mse = np.mean(difference ** 2)
+        mae = np.mean(abs_difference)
+        max_error = np.max(abs_difference)
+        
+        print(f"MSE: {mse:.6f}")
+        print(f"MAE: {mae:.6f}")
+        print(f"Max Error: {max_error:.6f}")
+        print(f"File 1 range: [{depth1.min():.3f}, {depth1.max():.3f}]")
+        print(f"File 2 range: [{depth2.min():.3f}, {depth2.max():.3f}]")
+        
+        # Create comparison plot
+        plt.figure(figsize=(15, 8))
+        
+        # File 1
+        plt.subplot(2, 3, 1)
+        plt.imshow(depth1, cmap='jet')
+        plt.title(f'File 1: {os.path.basename(folder1)}')
+        plt.colorbar()
+        
+        # File 2
+        plt.subplot(2, 3, 2)
+        plt.imshow(depth2, cmap='jet')
+        plt.title(f'File 2: {os.path.basename(folder2)}')
+        plt.colorbar()
+        
+        # Absolute difference
+        plt.subplot(2, 3, 3)
+        plt.imshow(abs_difference, cmap='hot')
+        plt.title(f'Absolute Difference\nMAE: {mae:.4f}')
+        plt.colorbar()
+        
+        # Raw difference (can be negative)
+        plt.subplot(2, 3, 4)
+        plt.imshow(difference, cmap='RdBu_r', vmin=-max_error, vmax=max_error)
+        plt.title(f'Raw Difference\nMSE: {mse:.4f}')
+        plt.colorbar()
+        
+        # Histogram of differences
+        plt.subplot(2, 3, 5)
+        plt.hist(difference.flatten(), bins=50, alpha=0.7, edgecolor='black')
+        plt.xlabel('Difference Value')
+        plt.ylabel('Frequency')
+        plt.title('Difference Distribution')
+        plt.grid(True, alpha=0.3)
+        
+        # Scatter plot
+        plt.subplot(2, 3, 6)
+        sample_indices = np.random.choice(depth1.size, min(5000, depth1.size), replace=False)
+        plt.scatter(depth1.flat[sample_indices], depth2.flat[sample_indices], alpha=0.6, s=1)
+        plt.xlabel('File 1 Values')
+        plt.ylabel('File 2 Values')
+        plt.title('Value Correlation')
+        
+        # Add diagonal line for perfect correlation
+        min_val = min(depth1.min(), depth2.min())
+        max_val = max(depth1.max(), depth2.max())
+        plt.plot([min_val, max_val], [min_val, max_val], 'r--', alpha=0.8)
+        plt.grid(True, alpha=0.3)
+        
+        plt.suptitle(f'Depth Comparison: {filename}', fontsize=14)
+        plt.tight_layout()
+        plt.show()
+        
+    except Exception as e:
+        print(f"Error comparing {filename}: {e}")
+
+
+
+
+if __name__ == "__main__":
+
+    compare_one(FOLDER1, FOLDER2, FILE_NAME)

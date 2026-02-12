@@ -53,7 +53,6 @@ srun apptainer exec \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
     /opt/conda/envs/planarSplatting/bin/python exp_prior.py \
-        --data_path ${DATA_PATH} \
-        --use_mask
+        --data_path ${DATA_PATH}
 
 echo "--- Job finished ---"
