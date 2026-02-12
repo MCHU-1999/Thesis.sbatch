@@ -17,7 +17,7 @@ MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/runs/colmap
 
 # CHANGE THIS to the folder containing your 'input' subfolder
-DATA_PATH=${MY_STORAGE}/synthetic/Cube
+DATA_PATH=${MY_STORAGE}/synthetic/WoodenHouse
 
 # CHANGE THIS to point to the new container you built
 SIF_PATH=${MY_STORAGE}/containers/colmap.sif 
