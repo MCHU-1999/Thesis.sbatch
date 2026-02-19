@@ -46,6 +46,7 @@ srun apptainer exec \
     --containall \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
+    --env QT_QPA_PLATFORM=offscreen \
     ${SIF_PATH} \
     /opt/conda/envs/planargs/bin/python run_lp3.py \
         -s ${DATA_PATH}\
