@@ -17,12 +17,12 @@
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
-DATA_PATH=${MY_STORAGE}/synthetic/WoodenHouse
+DATA_PATH=${MY_STORAGE}/synthetic/rubik
 
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
-echo "Running Dataset: TnT"
+echo "Running Dataset: Simple"
 
 # --- Environment Setup ---
 echo "Loading modules..."
@@ -54,7 +54,7 @@ srun apptainer exec \
     ${SIF_PATH} \
     /opt/conda/envs/planarSplatting/bin/python run_tnt_prior.py \
         --data_path ${DATA_PATH} \
-        --out_path planarSplat_ExpRes/WoodenHouse \
-        --exp_name WoodenHouse
+        --out_path planarSplat_ExpRes/rubik \
+        --exp_name rubik
 
 echo "--- Job finished ---"
