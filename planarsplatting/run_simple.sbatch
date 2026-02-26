@@ -45,18 +45,6 @@ export APPTAINERENV_TORCH_HOME=${MY_STORAGE}/.cache
 export APPTAINERENV_LD_LIBRARY_PATH="/usr/lib64:${LD_LIBRARY_PATH}"
 
 # --- Training Command ---
-# echo "Running command for simple case..."
-# srun apptainer exec \
-#     --nv \
-#     --containall \
-#     -B /tudelft.net/:/tudelft.net/ \
-#     --pwd ${REPO_PATH} \
-#     ${SIF_PATH} \
-#     /opt/conda/envs/planarSplatting/bin/python run_tnt_prior.py \
-#         --data_path ${DATA_PATH} \
-#         --out_path planarSplat_ExpRes/simple_house \
-#         --exp_name simple_house
-
 echo "Running command for simple case..."
 srun apptainer exec \
     --nv \
@@ -64,8 +52,20 @@ srun apptainer exec \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/planarSplatting/bin/python run_demo_colmap.py \
+    /opt/conda/envs/planarSplatting/bin/python run_tnt_prior.py \
         --data_path ${DATA_PATH} \
-        --out_path planarSplat_ExpRes/simple_house
+        --out_path planarSplat_ExpRes/simple_house \
+        --exp_name simple_house
+
+# echo "Running command for simple case..."
+# srun apptainer exec \
+#     --nv \
+#     --containall \
+#     -B /tudelft.net/:/tudelft.net/ \
+#     --pwd ${REPO_PATH} \
+#     ${SIF_PATH} \
+#     /opt/conda/envs/planarSplatting/bin/python run_demo_colmap.py \
+#         --data_path ${DATA_PATH} \
+#         --out_path planarSplat_ExpRes/simple_house
 
 echo "--- Job finished ---"
