@@ -10,8 +10,8 @@
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=slurm_cube_%j.out
-#SBATCH --error=slurm_cube_%j.err
+#SBATCH --output=slurm_simple_%j.out
+#SBATCH --error=slurm_simple_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
@@ -45,16 +45,27 @@ export APPTAINERENV_TORCH_HOME=${MY_STORAGE}/.cache
 export APPTAINERENV_LD_LIBRARY_PATH="/usr/lib64:${LD_LIBRARY_PATH}"
 
 # --- Training Command ---
-echo "Running command for TnT..."
+# echo "Running command for simple case..."
+# srun apptainer exec \
+#     --nv \
+#     --containall \
+#     -B /tudelft.net/:/tudelft.net/ \
+#     --pwd ${REPO_PATH} \
+#     ${SIF_PATH} \
+#     /opt/conda/envs/planarSplatting/bin/python run_tnt_prior.py \
+#         --data_path ${DATA_PATH} \
+#         --out_path planarSplat_ExpRes/simple_house \
+#         --exp_name simple_house
+
+echo "Running command for simple case..."
 srun apptainer exec \
     --nv \
     --containall \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/planarSplatting/bin/python run_tnt_prior.py \
+    /opt/conda/envs/planarSplatting/bin/python run_demo_colmap.py \
         --data_path ${DATA_PATH} \
-        --out_path planarSplat_ExpRes/simple_house \
-        --exp_name simple_house
+        --out_path planarSplat_ExpRes/simple_house
 
 echo "--- Job finished ---"
