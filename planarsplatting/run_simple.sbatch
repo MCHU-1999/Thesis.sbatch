@@ -55,17 +55,7 @@ srun apptainer exec \
     /opt/conda/envs/planarSplatting/bin/python run_tnt_prior.py \
         --data_path ${DATA_PATH} \
         --out_path planarSplat_ExpRes/simple_house \
-        --exp_name simple_house
-
-# echo "Running command for simple case..."
-# srun apptainer exec \
-#     --nv \
-#     --containall \
-#     -B /tudelft.net/:/tudelft.net/ \
-#     --pwd ${REPO_PATH} \
-#     ${SIF_PATH} \
-#     /opt/conda/envs/planarSplatting/bin/python run_demo_colmap.py \
-#         --data_path ${DATA_PATH} \
-#         --out_path planarSplat_ExpRes/simple_house
+        --exp_name simple_house \
+        --conf_path utils_demo/demo_simple.conf
 
 echo "--- Job finished ---"
