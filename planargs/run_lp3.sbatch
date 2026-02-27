@@ -41,7 +41,8 @@ ulimit -n 60000
 
 # Define a directory on your staff-umbrella or project storage
 export HF_HOME=${MY_STORAGE}/.cache/huggingface
-export TRANSFORMERS_CACHE=${MY_STORAGE}/.cache/huggingface
+export HF_HUB_CACHE=${MY_STORAGE}/.cache/huggingface/hub
+export TRANSFORMERS_CACHE=${MY_STORAGE}/.cache/huggingface/hub
 
 # --- Training Command ---
 echo "Running training command for TnT..."
