@@ -17,7 +17,7 @@
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
-DATA_PATH=${MY_STORAGE}/synthetic/simple_house
+DATA_PATH=${MY_STORAGE}/synthetic/rubik
 
 
 echo "--- Starting PlanarSplatting Training Job ---"
@@ -54,8 +54,8 @@ srun apptainer exec \
     ${SIF_PATH} \
     /opt/conda/envs/planarSplatting/bin/python run_tnt_prior.py \
         --data_path ${DATA_PATH} \
-        --out_path planarSplat_ExpRes/simple_house \
-        --exp_name simple_house \
+        --out_path planarSplat_ExpRes/rubik \
+        --exp_name rubik \
         --conf_path utils_demo/demo_simple.conf
 
 echo "--- Job finished ---"
