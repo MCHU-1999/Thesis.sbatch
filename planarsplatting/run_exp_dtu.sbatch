@@ -1,8 +1,8 @@
 #!/bin/sh
 
 #SBATCH --partition=general  # Request partition. Default is 'general'
-#SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
-#SBATCH --time=3:00:00       # Request run time (wall-clock) per job.
+#SBATCH --qos=medium         # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
+#SBATCH --time=6:00:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
 #SBATCH --cpus-per-task=4    # Request number of CPUs (threads) per task.
 #SBATCH --mem=48GB           # Request memory per node.
@@ -10,8 +10,8 @@
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=slurm_tnt_pgsr_%j.out
-#SBATCH --error=slurm_tnt_pgsr_%j.err
+#SBATCH --output=slurm_dtu_%j.out
+#SBATCH --error=slurm_dtu_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
