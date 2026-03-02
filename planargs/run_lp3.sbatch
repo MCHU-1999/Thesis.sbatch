@@ -46,6 +46,7 @@ srun apptainer exec \
     --containall \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
+    --env CUDA_HOME=/usr/local/cuda \
     --env QT_QPA_PLATFORM=offscreen \
     --env HF_HOME=${MY_STORAGE}/.cache/huggingface \
     --env HF_HUB_CACHE=${MY_STORAGE}/.cache/huggingface/hub \
