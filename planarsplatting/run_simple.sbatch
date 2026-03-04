@@ -17,7 +17,7 @@
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
-DATA_PATH=${MY_STORAGE}/synthetic/WoodenHouse
+DATA_PATH=${MY_STORAGE}/synthetic/box
 
 
 echo "--- Starting PlanarSplatting Training Job ---"
@@ -54,8 +54,8 @@ srun apptainer exec \
     ${SIF_PATH} \
     /opt/conda/envs/planarSplatting/bin/python run_tnt_prior.py \
         --data_path ${DATA_PATH} \
-        --out_path planarSplat_ExpRes/WoodenHouse \
-        --exp_name WoodenHouse \
+        --out_path planarSplat_ExpRes/box \
+        --exp_name box \
         --conf_path utils_demo/demo_simple.conf \
         --init_plane_num 2000 \
         --scene_bounding_sphere 10 \
