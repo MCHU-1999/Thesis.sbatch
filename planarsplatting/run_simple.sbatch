@@ -2,7 +2,7 @@
 
 #SBATCH --partition=general  # Request partition. Default is 'general'
 #SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
-#SBATCH --time=0:30:00       # Request run time (wall-clock) per job.
+#SBATCH --time=1:00:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
 #SBATCH --cpus-per-task=4    # Request number of CPUs (threads) per task.
 #SBATCH --mem=16GB           # Request memory per node.
@@ -17,7 +17,7 @@
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
-DATA_PATH=${MY_STORAGE}/synthetic/rubik
+DATA_PATH=${MY_STORAGE}/synthetic/WoodenHouse
 
 
 echo "--- Starting PlanarSplatting Training Job ---"
@@ -54,8 +54,15 @@ srun apptainer exec \
     ${SIF_PATH} \
     /opt/conda/envs/planarSplatting/bin/python run_tnt_prior.py \
         --data_path ${DATA_PATH} \
-        --out_path planarSplat_ExpRes/rubik \
-        --exp_name rubik \
-        --conf_path utils_demo/demo_simple.conf
+        --out_path planarSplat_ExpRes/WoodenHouse \
+        --exp_name WoodenHouse \
+        --conf_path utils_demo/demo_simple.conf \
+        --init_plane_num 2000 \
+        --scene_bounding_sphere 10 \
+        --max_total_iters 5000 \
+        --coarse_stage_ite 500 \
+        --split_start_ite 1000 \
+        --process_plane_freq_ite 500 \
+        --check_plane_vis_freq_ite 1000
 
 echo "--- Job finished ---"
