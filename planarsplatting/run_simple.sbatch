@@ -64,8 +64,6 @@ srun apptainer exec \
         --scene_bounding_sphere 10 \
         --max_total_iters 5000 \
         --coarse_stage_ite 500 \
-        --split_start_ite 1000 \
-        --process_plane_freq_ite 500 \
-        --check_plane_vis_freq_ite 1000
+        --split_start_ite 1000
 
 echo "--- Job finished ---"
