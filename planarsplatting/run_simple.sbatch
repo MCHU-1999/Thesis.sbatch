@@ -59,7 +59,7 @@ srun apptainer exec \
         --init_mesh ${INIT_MESH_PATH} \
         --out_path planarSplat_ExpRes/box \
         --exp_name box \
-        --conf_path utils_demo/demo_simple.conf \
+        --conf_path utils_demo/demo_blender.conf \
         --init_plane_num 2000 \
         --scene_bounding_sphere 10 \
         --max_total_iters 5000 \
