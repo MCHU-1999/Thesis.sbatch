@@ -57,6 +57,7 @@ srun apptainer exec \
         --max_total_iters 20000 \
         --coarse_stage_ite 5000 \
         --split_start_ite 6000 \
-        --exp_name meshbased_run1
+        --exp_name barn_meshbased \
+        --conf_path utils_demo/demo_meshbased.conf \
 
 echo "--- Job finished ---"
