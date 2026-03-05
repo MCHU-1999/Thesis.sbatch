@@ -61,9 +61,9 @@ srun apptainer exec \
         --exp_name box \
         --conf_path utils_demo/demo_blender.conf \
         --init_plane_num 2000 \
-        --scene_bounding_sphere 10 \
-        --max_total_iters 5000 \
-        --coarse_stage_ite 500 \
-        --split_start_ite 1000
+        --scene_bounding_sphere 12 \
+        --max_total_iters 10000 \
+        --coarse_stage_ite 1000 \
+        --split_start_ite 2000
 
 echo "--- Job finished ---"
