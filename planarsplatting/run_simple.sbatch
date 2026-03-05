@@ -18,6 +18,7 @@ MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
 DATA_PATH=${MY_STORAGE}/synthetic/box
+INIT_MESH_PATH=${DATA_PATH}/init_mesh.ply
 
 
 echo "--- Starting PlanarSplatting Training Job ---"
@@ -52,8 +53,10 @@ srun apptainer exec \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/planarSplatting/bin/python run_tnt_prior.py \
+    /opt/conda/envs/planarSplatting/bin/python run_tnt_pgsr.py \
         --data_path ${DATA_PATH} \
+        --geo_data_path ${DATA_PATH} \
+        --init_mesh ${INIT_MESH_PATH} \
         --out_path planarSplat_ExpRes/box \
         --exp_name box \
         --conf_path utils_demo/demo_simple.conf \
