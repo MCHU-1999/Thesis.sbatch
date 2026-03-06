@@ -10,8 +10,8 @@
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=slurm_tnt_pgsr_%j.out
-#SBATCH --error=slurm_tnt_pgsr_%j.err
+#SBATCH --output=slurm_exp_pgsr_%j.out
+#SBATCH --error=slurm_exp_pgsr_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
@@ -23,7 +23,6 @@ INIT_MESH_PATH=${MY_STORAGE}/PGSR/output_tnt/Barn/test/mesh/tsdf_fusion_post.ply
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
-echo "Running Dataset: TnT"
 
 # --- Environment Setup ---
 echo "Loading modules..."
@@ -42,7 +41,7 @@ echo "Python version: $(python --version)"
 ulimit -n 60000
 
 # --- Training Command ---
-echo "Running command for TnT..."
+echo "Running command..."
 srun apptainer exec \
     --nv \
     --containall \

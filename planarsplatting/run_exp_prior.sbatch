@@ -10,8 +10,8 @@
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=slurm_tnt_prior_%j.out
-#SBATCH --error=slurm_tnt_prior_%j.err
+#SBATCH --output=slurm_exp_prior_%j.out
+#SBATCH --error=slurm_exp_prior_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
@@ -21,7 +21,6 @@ DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
-echo "Running Dataset: TnT"
 
 # --- Environment Setup ---
 echo "Loading modules..."
@@ -44,7 +43,7 @@ export APPTAINERENV_TORCH_HOME=${MY_STORAGE}/.cache
 export APPTAINERENV_LD_LIBRARY_PATH="/usr/lib64:${LD_LIBRARY_PATH}"
 
 # --- Training Command ---
-echo "Running command for TnT..."
+echo "Running command..."
 # With mask
 srun apptainer exec \
     --nv \

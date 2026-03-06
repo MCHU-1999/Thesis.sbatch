@@ -20,7 +20,6 @@ SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
-echo "Running Dataset: TnT"
 
 # --- Environment Setup ---
 echo "Loading modules..."
@@ -43,7 +42,7 @@ export APPTAINERENV_TORCH_HOME=${MY_STORAGE}/.cache
 export APPTAINERENV_LD_LIBRARY_PATH="/usr/lib64:${LD_LIBRARY_PATH}"
 
 # --- Training Command ---
-echo "Running command for TnT..."
+echo "Running command..."
 srun apptainer exec \
     --nv \
     --containall \
