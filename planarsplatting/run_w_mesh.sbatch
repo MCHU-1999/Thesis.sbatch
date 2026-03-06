@@ -10,20 +10,20 @@
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=slurm_meshbased_%j.out
-#SBATCH --error=slurm_meshbased_%j.err
+#SBATCH --output=slurm_mesh_%j.out
+#SBATCH --error=slurm_mesh_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
-DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
-GEO_DATA_PATH=${MY_STORAGE}/PGSR/output_tnt/Barn/test/train/ours_30000
-INIT_MESH_PATH=${MY_STORAGE}/PGSR/output_tnt/Barn/test/mesh/tsdf_fusion_post.ply
+# DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
+# INIT_MESH_PATH=${MY_STORAGE}/PGSR/output_tnt/Barn/test/mesh/tsdf_fusion_post.ply
+DATA_PATH=${MY_STORAGE}/DTU/scan24
+INIT_MESH_PATH=${MY_STORAGE}/PGSR/output_dtu/dtu_scan24/test/mesh/tsdf_fusion_post.ply
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
-echo "Running Dataset: TnT"
 
 # --- Environment Setup ---
 echo "Loading modules..."
@@ -42,7 +42,7 @@ echo "Python version: $(python --version)"
 ulimit -n 60000
 
 # --- Training Command ---
-echo "Running command for TnT..."
+echo "Running command..."
 srun apptainer exec \
     --nv \
     --containall \
