@@ -8,7 +8,7 @@ from pathlib import Path
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python recolor_maps.py <input_folder>")
+        print("Usage: python recolor_depths.py <input_folder>")
         sys.exit(1)
     
     input_folder = sys.argv[1]
