@@ -18,7 +18,6 @@ MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
 DATA_PATH=${MY_STORAGE}/synthetic/SimpleHouse
-INIT_MESH_PATH=${DATA_PATH}/mono_mesh.ply
 
 
 echo "--- Starting PlanarSplatting Training Job ---"
@@ -56,7 +55,6 @@ srun apptainer exec \
     /opt/conda/envs/planarSplatting/bin/python run_blender.py \
         --data_path ${DATA_PATH} \
         --geo_data_path ${DATA_PATH} \
-        --init_mesh ${INIT_MESH_PATH} \
         --out_path planarSplat_ExpRes/SimpleHouse \
         --exp_name SimpleHouse \
         --conf_path utils_demo/demo_blender.conf \
