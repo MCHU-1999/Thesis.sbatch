@@ -17,7 +17,7 @@
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
-DATA_PATH=${MY_STORAGE}/synthetic/box
+DATA_PATH=${MY_STORAGE}/synthetic/SimpleHouse
 INIT_MESH_PATH=${DATA_PATH}/mono_mesh.ply
 
 
@@ -57,8 +57,8 @@ srun apptainer exec \
         --data_path ${DATA_PATH} \
         --geo_data_path ${DATA_PATH} \
         --init_mesh ${INIT_MESH_PATH} \
-        --out_path planarSplat_ExpRes/box \
-        --exp_name box \
+        --out_path planarSplat_ExpRes/SimpleHouse \
+        --exp_name SimpleHouse \
         --conf_path utils_demo/demo_blender.conf \
         --init_plane_num 2000 \
         --scene_bounding_sphere 12 \
