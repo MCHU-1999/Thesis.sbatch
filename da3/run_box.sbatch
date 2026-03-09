@@ -41,6 +41,9 @@ ulimit -n 60000
 export TORCH_HOME=${MY_STORAGE}/.cache
 export APPTAINERENV_TORCH_HOME=${MY_STORAGE}/.cache
 export APPTAINERENV_LD_LIBRARY_PATH="/usr/lib64:${LD_LIBRARY_PATH}"
+export APPTAINERENV_HF_HOME=${MY_STORAGE}/.cache/huggingface
+export APPTAINERENV_HF_HUB_CACHE=${MY_STORAGE}/.cache/huggingface/hub
+export APPTAINERENV_TRANSFORMERS_CACHE=${MY_STORAGE}/.cache/huggingface/hub
 
 # --- Training Command ---
 echo "Running command..."
