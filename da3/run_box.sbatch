@@ -47,14 +47,16 @@ export APPTAINERENV_TRANSFORMERS_CACHE=${MY_STORAGE}/.cache/huggingface/hub
 
 # --- Training Command ---
 echo "Running command..."
-# With mask
+
 srun apptainer exec \
     --nv \
     --containall \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/DA3/bin/python run_da3_simple.py \
-        --data_dir ${DATA_PATH}
+    bash -c "echo 'Installing DA3...' && \
+             /opt/conda/envs/DA3/bin/pip install -e . --quiet && \
+             echo 'Running DA3...' && \
+             /opt/conda/envs/DA3/bin/python run_da3_simple.py --data_dir ${DATA_PATH}"
 
 echo "--- Job finished ---"
