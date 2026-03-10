@@ -7,8 +7,8 @@
 #SBATCH --cpus-per-task=1   # Request number of CPUs (threads) per task. Default is 1 (note: CPUs are always allocated to jobs per 2).
 #SBATCH --mem=32GB          # Request memory (MB) per node. Default is 1024MB (1GB). For multiple tasks, specify --mem-per-cpu instead
 #SBATCH --mail-type=END     # Set mail type to 'END' to receive a mail when the job finishes. 
-#SBATCH --output=build_%j.out # Set name of output log. %j is the Slurm jobId
-#SBATCH --error=build_%j.err # Set name of error log. %j is the Slurm jobId
+#SBATCH --output=build2_%j.out # Set name of output log. %j is the Slurm jobId
+#SBATCH --error=build2_%j.err # Set name of error log. %j is the Slurm jobId
 
 
 # Define the host paths and where they will appear inside the container
@@ -18,4 +18,4 @@ export APPTAINER_TMPDIR=${MY_STORAGE}/.cache/apptainer/cache
 export APPTAINER_CACHEDIR=${MY_STORAGE}/.cache/apptainer/tmp
 
 # Remaining job commands go below here. 
-srun --chdir=${MY_STORAGE}/containers apptainer build --fakeroot da3.sif da3.def 
+srun --chdir=${MY_STORAGE}/containers apptainer build --fakeroot da3_base.sif da3_base.def 
