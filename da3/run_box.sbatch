@@ -55,7 +55,7 @@ srun apptainer exec \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
     bash -c "echo 'Installing DA3...' && \
-             /opt/conda/envs/DA3/bin/pip install -e . --quiet && \
+             /opt/conda/envs/DA3/bin/pip install -e . && \
              echo 'Running DA3...' && \
              /opt/conda/envs/DA3/bin/python run_da3_simple.py --data_dir ${DATA_PATH}"
 
