@@ -10,14 +10,14 @@
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=slurm_DA3_%j.out
-#SBATCH --error=slurm_DA3_%j.err
+#SBATCH --output=slurm_inference_%j.out
+#SBATCH --error=slurm_inference_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/DA3
 SIF_PATH=${MY_STORAGE}/containers/da3.sif
-DATA_PATH=${MY_STORAGE}/synthetic/box
+DATA_PATH=${MY_STORAGE}/synthetic/SimpleHouse
 
 echo "--- Starting DA3 Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
