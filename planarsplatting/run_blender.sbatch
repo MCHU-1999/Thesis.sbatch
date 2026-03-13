@@ -10,14 +10,14 @@
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=slurm_simple_%j.out
-#SBATCH --error=slurm_simple_%j.err
+#SBATCH --output=slurm_blender_%j.out
+#SBATCH --error=slurm_blender_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
-DATA_PATH=${MY_STORAGE}/synthetic/SimpleHouse
+DATA_PATH=${MY_STORAGE}/synthetic/SimpleHouse2
 
 
 echo "--- Starting PlanarSplatting Training Job ---"
@@ -55,8 +55,8 @@ srun apptainer exec \
     /opt/conda/envs/planarSplatting/bin/python run_blender.py \
         --data_path ${DATA_PATH} \
         --geo_data_path ${DATA_PATH} \
-        --out_path planarSplat_ExpRes/SimpleHouse \
-        --exp_name SimpleHouse \
+        --out_path planarSplat_ExpRes/SimpleHouse2 \
+        --exp_name SimpleHouse2 \
         --conf_path utils_demo/demo_blender.conf \
         --init_plane_num 2000 \
         --scene_bounding_sphere 12 \
