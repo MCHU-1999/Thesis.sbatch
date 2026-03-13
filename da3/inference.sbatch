@@ -19,7 +19,7 @@ REPO_PATH=${MY_STORAGE}/DA3
 SIF_PATH=${MY_STORAGE}/containers/da3.sif
 # DATA_PATH=${MY_STORAGE}/synthetic/SimpleHouse
 # DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
-DATA_PATH=${MY_STORAGE}/DTU/scan24
+DATA_PATH=${MY_STORAGE}/DTU/scan40
 
 echo "--- Starting DA3 Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
