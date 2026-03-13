@@ -2,7 +2,7 @@
 
 #SBATCH --partition=general  # Request partition. Default is 'general'
 #SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
-#SBATCH --time=1:00:00       # Request run time (wall-clock) per job.
+#SBATCH --time=1:30:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
 #SBATCH --cpus-per-task=4    # Request number of CPUs (threads) per task.
 #SBATCH --mem=32GB           # Request memory per node.
@@ -17,9 +17,9 @@
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
-DATA_PATH=${MY_STORAGE}/synthetic/SimpleHouse
-# DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
-DATA_PATH=${MY_STORAGE}/DTU/scan40
+# DATA_PATH=${MY_STORAGE}/synthetic/SimpleHouse
+DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
+# DATA_PATH=${MY_STORAGE}/DTU/scan40
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
@@ -55,7 +55,7 @@ srun apptainer exec \
         --max_total_iters 5000 \
         --coarse_stage_ite 500 \
         --split_start_ite 1000 \
-        --exp_name DTU_scan40 \
+        --exp_name barn \
         --conf_path utils_demo/demo_DA3.conf \
 
 echo "--- Job finished ---"
