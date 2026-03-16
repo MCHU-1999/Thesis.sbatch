@@ -17,10 +17,10 @@
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
-# DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
-# INIT_MESH_PATH=${MY_STORAGE}/PGSR/output_tnt/Barn/test/mesh/tsdf_fusion_post.ply
-DATA_PATH=${MY_STORAGE}/DTU/scan24
-INIT_MESH_PATH=${MY_STORAGE}/PGSR/output_dtu/dtu_scan24/test/mesh/tsdf_fusion_post.ply
+DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
+INIT_MESH_PATH=${MY_STORAGE}/PGSR/output_tnt/Barn/test/mesh/tsdf_fusion_post.ply
+# DATA_PATH=${MY_STORAGE}/DTU/scan24
+# INIT_MESH_PATH=${MY_STORAGE}/PGSR/output_dtu/dtu_scan24/test/mesh/tsdf_fusion_post.ply
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
