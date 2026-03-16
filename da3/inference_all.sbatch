@@ -21,7 +21,7 @@ SIF_PATH=${MY_STORAGE}/containers/da3.sif
 # DATA_PATH=${MY_STORAGE}/synthetic/SimpleHouse2
 # DATA_PATH=${MY_STORAGE}/DTU/scan24
 # DATA_PATH=${MY_STORAGE}/DTU/scan40
-DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
+# DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
 
 
 echo "--- Starting DA3 Job ---"
@@ -59,9 +59,20 @@ srun apptainer exec \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    bash -c "echo 'Installing DA3...' && \
-             /opt/conda/envs/DA3/bin/pip install -e . && \
-             echo 'Running DA3...' && \
-             /opt/conda/envs/DA3/bin/python run_da3_simple.py --data_dir ${DATA_PATH}"
+    bash -lc "
+set -e
+echo 'Installing DA3...'
+/opt/conda/envs/DA3/bin/pip install -e . --quiet --no-user
 
+for DATA_PATH in \
+    ${MY_STORAGE}/synthetic/box \
+    ${MY_STORAGE}/synthetic/SimpleHouse2 \
+    ${MY_STORAGE}/DTU/scan24 \
+    ${MY_STORAGE}/DTU/scan40 \
+    ${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
+do
+    echo \"Running DA3 on \${DATA_PATH}...\"
+    /opt/conda/envs/DA3/bin/python run_da3_simple.py --data_dir \"\${DATA_PATH}\"
+done
+"
 echo "--- Job finished ---"
