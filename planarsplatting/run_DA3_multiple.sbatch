@@ -18,12 +18,13 @@ REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
 
 # Define arrays for names and paths
-SCENES=("box" "SimpleHouse2" "scan24" "scan40")
+SCENES=("box" "SimpleHouse2" "scan24" "scan40" "Barn")
 PATHS=(
     "${MY_STORAGE}/synthetic/box"
     "${MY_STORAGE}/synthetic/SimpleHouse2"
     "${MY_STORAGE}/DTU/scan24"
     "${MY_STORAGE}/DTU/scan40"
+    "${MY_STORAGE}/TNT_GOF/TrainingSet/Barn"
 )
 
 # --- Environment Setup ---
@@ -36,7 +37,7 @@ module load miniconda/3.11
 echo "--- Starting Seq Training Job ---"
 
 # --- Seq Loop ---
-# This loop iterates from index 0 to 4
+# This loop iterates from index 0 to 5
 for i in ${!SCENES[@]}; do
     DATA_PATH=${PATHS[$i]}
     CURRENT_SCENE=${SCENES[$i]}
@@ -56,7 +57,7 @@ for i in ${!SCENES[@]}; do
         /opt/conda/envs/planarSplatting/bin/python run_DA3.py \
             --data_path ${DATA_PATH} \
             --init_plane_num 2000 \
-            --scene_bounding_sphere 6 \
+            --scene_bounding_sphere 10 \
             --max_total_iters 5000 \
             --coarse_stage_ite 500 \
             --split_start_ite 1000 \
