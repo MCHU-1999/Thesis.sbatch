@@ -62,7 +62,7 @@ srun apptainer exec \
     bash -lc "
 set -e
 echo 'Installing DA3...'
-/opt/conda/envs/DA3/bin/pip install -e . --quiet --no-user
+/opt/conda/envs/DA3/bin/pip install -e . 
 
 for DATA_PATH in \
     ${MY_STORAGE}/synthetic/box \
