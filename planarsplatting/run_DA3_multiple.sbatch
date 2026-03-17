@@ -9,8 +9,8 @@
 #SBATCH --mail-type=END
 #SBATCH --gres=gpu:a40:1
 
-#SBATCH --output=slurm_DA3_sequential_%j.out
-#SBATCH --error=slurm_DA3_sequential_%j.err
+#SBATCH --output=slurm_DA3_seq_%j.out
+#SBATCH --error=slurm_DA3_seq_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
@@ -33,9 +33,9 @@ module load cuda/12.1
 module load devtoolset/11
 module load miniconda/3.11
 
-echo "--- Starting Sequential Training Job ---"
+echo "--- Starting Seq Training Job ---"
 
-# --- Sequential Loop ---
+# --- Seq Loop ---
 # This loop iterates from index 0 to 4
 for i in ${!SCENES[@]}; do
     DATA_PATH=${PATHS[$i]}
