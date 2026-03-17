@@ -43,7 +43,7 @@ for i in ${!SCENES[@]}; do
     CURRENT_SCENE=${SCENES[$i]}
 
     echo "***********************************************"
-    echo "Processing Scene $(i+1): ${CURRENT_SCENE}"
+    echo "Processing Scene: ${CURRENT_SCENE}"
     echo "Path: ${DATA_PATH}"
     echo "Start Time: $(date)"
     echo "***********************************************"
