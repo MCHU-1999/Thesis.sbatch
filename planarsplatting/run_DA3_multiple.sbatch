@@ -1,0 +1,69 @@
+#!/bin/sh
+
+#SBATCH --partition=general
+#SBATCH --qos=short
+#SBATCH --time=03:00:00
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=32GB
+#SBATCH --mail-type=END
+#SBATCH --gres=gpu:a40:1
+
+#SBATCH --output=slurm_DA3_sequential_%j.out
+#SBATCH --error=slurm_DA3_sequential_%j.err
+
+# --- Configuration ---
+MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
+REPO_PATH=${MY_STORAGE}/PlanarSplatting
+SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
+
+# Define arrays for names and paths
+SCENES=("box" "SimpleHouse2" "scan24" "scan40")
+PATHS=(
+    "${MY_STORAGE}/synthetic/box"
+    "${MY_STORAGE}/synthetic/SimpleHouse2"
+    "${MY_STORAGE}/DTU/scan24"
+    "${MY_STORAGE}/DTU/scan40"
+)
+
+# --- Environment Setup ---
+module purge
+module use /opt/insy/modulefiles
+module load cuda/12.1
+module load devtoolset/11
+module load miniconda/3.11
+
+echo "--- Starting Sequential Training Job ---"
+
+# --- Sequential Loop ---
+# This loop iterates from index 0 to 4
+for i in ${!SCENES[@]}; do
+    DATA_PATH=${PATHS[$i]}
+    CURRENT_SCENE=${SCENES[$i]}
+
+    echo "***********************************************"
+    echo "Processing Scene $(i+1): ${CURRENT_SCENE}"
+    echo "Path: ${DATA_PATH}"
+    echo "Start Time: $(date)"
+    echo "***********************************************"
+
+    srun apptainer exec \
+        --nv \
+        --containall \
+        -B /tudelft.net/:/tudelft.net/ \
+        --pwd ${REPO_PATH} \
+        ${SIF_PATH} \
+        /opt/conda/envs/planarSplatting/bin/python run_DA3.py \
+            --data_path ${DATA_PATH} \
+            --init_plane_num 2000 \
+            --scene_bounding_sphere 6 \
+            --max_total_iters 5000 \
+            --coarse_stage_ite 500 \
+            --split_start_ite 1000 \
+            --exp_name ${CURRENT_SCENE} \
+            --conf_path utils_demo/demo_DA3.conf
+
+    echo "Finished ${CURRENT_SCENE} at $(date)"
+done
+
+echo "--- All 5 scenes finished ---"

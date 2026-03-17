@@ -5,7 +5,7 @@
 #SBATCH --time=1:30:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
 #SBATCH --cpus-per-task=4    # Request number of CPUs (threads) per task.
-#SBATCH --mem=80GB           # Request memory per node.
+#SBATCH --mem=48GB           # Request memory per node.
 #SBATCH --mail-type=END      # Set mail type to 'END' to receive a mail when the job finishes.
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
@@ -17,9 +17,7 @@
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
-# DATA_PATH=${MY_STORAGE}/synthetic/SimpleHouse
 DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
-# DATA_PATH=${MY_STORAGE}/DTU/scan40
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
@@ -55,7 +53,7 @@ srun apptainer exec \
         --max_total_iters 5000 \
         --coarse_stage_ite 500 \
         --split_start_ite 1000 \
-        --exp_name barn \
+        --exp_name Barn \
         --conf_path utils_demo/demo_DA3.conf \
 
 echo "--- Job finished ---"
