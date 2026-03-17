@@ -18,13 +18,12 @@ REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
 
 # Define arrays for names and paths
-SCENES=("box" "SimpleHouse2" "scan24" "scan40" "Barn")
+SCENES=("box" "SimpleHouse2" "scan24" "scan40")
 PATHS=(
     "${MY_STORAGE}/synthetic/box"
     "${MY_STORAGE}/synthetic/SimpleHouse2"
     "${MY_STORAGE}/DTU/scan24"
     "${MY_STORAGE}/DTU/scan40"
-    "${MY_STORAGE}/TNT_GOF/TrainingSet/Barn"
 )
 
 # --- Environment Setup ---
