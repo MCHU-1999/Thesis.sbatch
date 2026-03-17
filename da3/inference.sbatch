@@ -17,11 +17,11 @@
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/DA3
 SIF_PATH=${MY_STORAGE}/containers/da3.sif
-# DATA_PATH=${MY_STORAGE}/synthetic/box
+DATA_PATH=${MY_STORAGE}/synthetic/box
 # DATA_PATH=${MY_STORAGE}/synthetic/SimpleHouse2
 # DATA_PATH=${MY_STORAGE}/DTU/scan24
 # DATA_PATH=${MY_STORAGE}/DTU/scan40
-DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
+# DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
 
 
 echo "--- Starting DA3 Job ---"
