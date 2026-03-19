@@ -15,8 +15,6 @@
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
-DA3_REPO_PATH=${MY_STORAGE}/DA3
-DA3_SIF_PATH=${MY_STORAGE}/containers/da3.sif
 PS_REPO_PATH=${MY_STORAGE}/PlanarSplatting
 PS_SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
 
@@ -63,7 +61,7 @@ for CURRENT_SIZE in "${SIZES[@]}"; do
         -B /tudelft.net/:/tudelft.net/ \
         --pwd "${PS_REPO_PATH}" \
         "${PS_SIF_PATH}" \
-        /opt/conda/envs/planarSplatting/bin/python run_DA3.py \
+        /opt/conda/envs/planarSplatting/bin/python run_blender.py \
             --data_path "${DATA_PATH}" \
             --init_plane_num 2000 \
             --scene_bounding_sphere 6 \
@@ -71,7 +69,7 @@ for CURRENT_SIZE in "${SIZES[@]}"; do
             --coarse_stage_ite 500 \
             --split_start_ite 1000 \
             --exp_name "box_voxel${CURRENT_SIZE}" \
-            --conf_path utils_demo/demo_DA3.conf \
+            --conf_path utils_demo/demo_blender.conf \
             --voxel_length "${CURRENT_SIZE}"
 done
 
