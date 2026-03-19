@@ -17,7 +17,7 @@
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
-DATA_PATH=${MY_STORAGE}/synthetic/SimpleHouse2
+DATA_PATH=${MY_STORAGE}/synthetic/box
 
 
 echo "--- Starting PlanarSplatting Training Job ---"

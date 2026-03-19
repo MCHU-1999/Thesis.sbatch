@@ -62,7 +62,8 @@ for CURRENT_SIZE in "${SIZES[@]}"; do
         --pwd "${PS_REPO_PATH}" \
         "${PS_SIF_PATH}" \
         /opt/conda/envs/planarSplatting/bin/python run_blender.py \
-            --data_path "${DATA_PATH}" \
+            --data_path ${DATA_PATH} \
+            --geo_data_path ${DATA_PATH} \
             --init_plane_num 2000 \
             --scene_bounding_sphere 6 \
             --max_total_iters 5000 \
