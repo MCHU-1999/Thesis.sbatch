@@ -2,7 +2,7 @@
 
 #SBATCH --partition=general
 #SBATCH --qos=short
-#SBATCH --time=02:00:00
+#SBATCH --time=01:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32GB
