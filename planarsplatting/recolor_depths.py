@@ -37,6 +37,7 @@ def main():
                 depth_data = depth_data[:, :, 0]
             
             # Normalize depth map
+            # depth_data = np.clip(depth_data, 0, 100)
             depth_normalized = (depth_data - depth_data.min()) / (depth_data.max() - depth_data.min() + 1e-8)
             depth_colored = cv2.applyColorMap((depth_normalized * 255).astype(np.uint8), cv2.COLORMAP_JET)
             

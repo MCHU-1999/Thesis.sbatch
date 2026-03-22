@@ -20,11 +20,11 @@ DA3_SIF_PATH=${MY_STORAGE}/containers/da3.sif
 PS_REPO_PATH=${MY_STORAGE}/PlanarSplatting
 PS_SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
 
-DATA_PATH=${MY_STORAGE}/synthetic/box
+# DATA_PATH=${MY_STORAGE}/synthetic/box
 # DATA_PATH=${MY_STORAGE}/synthetic/SimpleHouse2
 # DATA_PATH=${MY_STORAGE}/DTU/scan24
 # DATA_PATH=${MY_STORAGE}/DTU/scan40
-# DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
+DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
@@ -79,7 +79,7 @@ srun apptainer exec \
         --max_total_iters 5000 \
         --coarse_stage_ite 500 \
         --split_start_ite 1000 \
-        --exp_name box \
+        --exp_name Barn \
         --conf_path utils_demo/demo_DA3.conf \
 
 echo "--- Job finished ---"
