@@ -54,7 +54,6 @@ srun apptainer exec \
     ${SIF_PATH} \
     /opt/conda/envs/planarSplatting/bin/python run_blender.py \
         --data_path ${DATA_PATH} \
-        --geo_data_path ${DATA_PATH} \
         --out_path planarSplat_ExpRes/SimpleHouse2 \
         --exp_name SimpleHouse2 \
         --conf_path configs/blender.conf
