@@ -64,13 +64,8 @@ for CURRENT_SIZE in "${SIZES[@]}"; do
         /opt/conda/envs/planarSplatting/bin/python run_blender.py \
             --data_path ${DATA_PATH} \
             --geo_data_path ${DATA_PATH} \
-            --init_plane_num 2000 \
-            --scene_bounding_sphere 6 \
-            --max_total_iters 5000 \
-            --coarse_stage_ite 500 \
-            --split_start_ite 1000 \
             --exp_name "box_voxel${CURRENT_SIZE}" \
-            --conf_path utils_demo/demo_blender.conf \
+            --conf_path configs/blender.conf \
             --voxel_length "${CURRENT_SIZE}"
 done
 

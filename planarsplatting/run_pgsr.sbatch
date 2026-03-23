@@ -2,22 +2,24 @@
 
 #SBATCH --partition=general  # Request partition. Default is 'general'
 #SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
-#SBATCH --time=1:30:00       # Request run time (wall-clock) per job.
+#SBATCH --time=1:00:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
 #SBATCH --cpus-per-task=4    # Request number of CPUs (threads) per task.
-#SBATCH --mem=48GB           # Request memory per node.
+#SBATCH --mem=16GB           # Request memory per node.
 #SBATCH --mail-type=END      # Set mail type to 'END' to receive a mail when the job finishes.
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=slurm_exp_prior_%j.out
-#SBATCH --error=slurm_exp_prior_%j.err
+#SBATCH --output=slurm_exp_pgsr_%j.out
+#SBATCH --error=slurm_exp_pgsr_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
 DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
+GEO_DATA_PATH=${MY_STORAGE}/PGSR/output_tnt/Barn/test/train/ours_30000
+INIT_MESH_PATH=${MY_STORAGE}/PGSR/output_tnt/Barn/test/mesh/tsdf_fusion_post.ply
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
@@ -38,20 +40,18 @@ echo "Python version: $(python --version)"
 /usr/bin/nvidia-smi
 ulimit -n 60000
 
-export TORCH_HOME=${MY_STORAGE}/.cache
-export APPTAINERENV_TORCH_HOME=${MY_STORAGE}/.cache
-export APPTAINERENV_LD_LIBRARY_PATH="/usr/lib64:${LD_LIBRARY_PATH}"
-
 # --- Training Command ---
 echo "Running command..."
-# With mask
 srun apptainer exec \
     --nv \
     --containall \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/planarSplatting/bin/python exp_prior.py \
-        --data_path ${DATA_PATH}
+    /opt/conda/envs/planarSplatting/bin/python run_pgsr.py \
+        --data_path ${DATA_PATH} \
+        --geo_data_path ${GEO_DATA_PATH} \
+        --init_mesh ${INIT_MESH_PATH} \
+        --exp_name Barn
 
 echo "--- Job finished ---"

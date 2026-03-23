@@ -55,13 +55,8 @@ for i in ${!SCENES[@]}; do
         ${SIF_PATH} \
         /opt/conda/envs/planarSplatting/bin/python run_DA3.py \
             --data_path ${DATA_PATH} \
-            --init_plane_num 2000 \
-            --scene_bounding_sphere 10 \
-            --max_total_iters 5000 \
-            --coarse_stage_ite 500 \
-            --split_start_ite 1000 \
             --exp_name ${CURRENT_SCENE} \
-            --conf_path utils_demo/demo_DA3.conf
+            --conf_path configs/DA3.conf
 
     echo "Finished ${CURRENT_SCENE} at $(date)"
 done

@@ -74,12 +74,7 @@ srun apptainer exec \
     ${PS_SIF_PATH} \
     /opt/conda/envs/planarSplatting/bin/python run_DA3.py \
         --data_path ${DATA_PATH} \
-        --init_plane_num 2000 \
-        --scene_bounding_sphere 6 \
-        --max_total_iters 20000 \
-        --coarse_stage_ite 5000 \
-        --split_start_ite 6000 \
         --exp_name Barn \
-        --conf_path utils_demo/demo_DA3.conf \
+        --conf_path configs/DA3.conf \
 
 echo "--- Job finished ---"

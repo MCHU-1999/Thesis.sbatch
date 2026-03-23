@@ -52,12 +52,7 @@ srun apptainer exec \
     /opt/conda/envs/planarSplatting/bin/python run_w_mesh.py \
         --data_path ${DATA_PATH} \
         --init_mesh ${INIT_MESH_PATH} \
-        --init_plane_num 2000 \
-        --scene_bounding_sphere 6 \
-        --max_total_iters 20000 \
-        --coarse_stage_ite 5000 \
-        --split_start_ite 6000 \
-        --exp_name barn_meshbased \
-        --conf_path utils_demo/demo_meshbased.conf \
+        --exp_name barn \
+        --conf_path configs/meshbased.conf \
 
 echo "--- Job finished ---"
