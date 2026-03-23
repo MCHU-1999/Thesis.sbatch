@@ -2,7 +2,7 @@
 
 #SBATCH --partition=general  # Request partition. Default is 'general'
 #SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
-#SBATCH --time=0:45:00       # Request run time (wall-clock) per job.
+#SBATCH --time=1:00:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
 #SBATCH --cpus-per-task=4    # Request number of CPUs (threads) per task.
 #SBATCH --mem=48GB           # Request memory per node.
@@ -76,9 +76,9 @@ srun apptainer exec \
         --data_path ${DATA_PATH} \
         --init_plane_num 2000 \
         --scene_bounding_sphere 6 \
-        --max_total_iters 5000 \
-        --coarse_stage_ite 500 \
-        --split_start_ite 1000 \
+        --max_total_iters 20000 \
+        --coarse_stage_ite 5000 \
+        --split_start_ite 6000 \
         --exp_name Barn \
         --conf_path utils_demo/demo_DA3.conf \
 
