@@ -65,8 +65,6 @@ echo 'Installing DA3...'
 /opt/conda/envs/DA3/bin/pip install -e . 
 
 for DATA_PATH in \
-    ${MY_STORAGE}/synthetic/box \
-    ${MY_STORAGE}/synthetic/SimpleHouse2 \
     ${MY_STORAGE}/DTU/scan24 \
     ${MY_STORAGE}/DTU/scan40
 do
