@@ -66,7 +66,8 @@ echo 'Installing DA3...'
 
 for DATA_PATH in \
     ${MY_STORAGE}/DTU/scan24 \
-    ${MY_STORAGE}/DTU/scan40
+    ${MY_STORAGE}/DTU/scan40 \
+    ${MY_STORAGE}/TNT_GOF/TrainingSet/Barn
 do
     echo \"Running DA3 on \${DATA_PATH}...\"
     /opt/conda/envs/DA3/bin/python run_da3_simple.py --data_dir \"\${DATA_PATH}\"
