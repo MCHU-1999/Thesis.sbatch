@@ -38,8 +38,10 @@ echo "Python version: $(python --version)"
 /usr/bin/nvidia-smi
 ulimit -n 60000
 
+export APPTAINERENV_QT_QPA_PLATFORM=offscreen
+
 # --- Training Command ---
-echo "Running training command for TnT..."
+echo "Running training command for DTU..."
 srun apptainer exec \
     --nv \
     --containall \
