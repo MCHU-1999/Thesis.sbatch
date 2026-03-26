@@ -20,7 +20,7 @@ SIF_PATH=${MY_STORAGE}/containers/pgsr.sif
 
 echo "--- Starting PGSR Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
-echo "Training Dataset: TnT"
+echo "Training Dataset: DTU"
 
 # --- Environment Setup ---
 echo "Loading modules..."
