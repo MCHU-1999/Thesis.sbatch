@@ -5,6 +5,50 @@ import sys
 import numpy as np
 import cv2
 from pathlib import Path
+import matplotlib.pyplot as plt
+
+def plot_depth_map(
+    depth_map,
+    title="Depth Map",
+    cmap="jet",
+    show=True,
+):
+    """
+    Plot a single depth map with a side colorbar legend.
+    Returns (fig, ax, im) so you can reuse or save externally.
+    """
+    depth = np.asarray(depth_map)
+
+    # If input is HxWxC, take first channel
+    if depth.ndim == 3:
+        depth = depth[:, :, 0]
+
+    if depth.ndim != 2:
+        raise ValueError(f"Expected 2D depth map (or 3D with channels), got shape {depth.shape}")
+
+    # Robust min/max from finite values only
+    finite = np.isfinite(depth)
+    if not np.any(finite):
+        raise ValueError("Depth map has no finite values to plot.")
+
+    vmin = np.min(depth[finite])
+    vmax = np.max(depth[finite])
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    im = ax.imshow(depth, cmap=cmap, vmin=vmin, vmax=vmax)
+    ax.set_title(title)
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+
+    # Side legend for depth values
+    cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+    cbar.set_label("Depth value", rotation=90)
+
+    plt.tight_layout()
+    if show:
+        plt.show()
+
+    return fig, ax, im
 
 def main():
     if len(sys.argv) != 2:
@@ -31,6 +75,8 @@ def main():
         try:
             # Load depth data
             depth_data = np.load(npy_file)
+
+            plot_depth_map(depth_data, npy_file.name)
             
             # Handle 3D arrays by taking first channel
             if depth_data.ndim == 3:
