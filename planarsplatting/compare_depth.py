@@ -5,9 +5,11 @@ from pathlib import Path
 
 
 
-FOLDER1 = "/Users/mchu/Documents/TUD/Thesis/DTU/scan40/DA3_depth"
-FOLDER2 = "/Users/mchu/Documents/TUD/Thesis/DTU/scan40/scaled_depth"
+# FOLDER1 = "/Users/mchu/Documents/TUD/Thesis/DTU/scan40/DA3_depth"
+# FOLDER2 = "/Users/mchu/Documents/TUD/Thesis/DTU/scan40/scaled_depth"
 # FOLDER2 = "/Users/mchu/Documents/TUD/Thesis/DTU/scan40/mono_depth"
+FOLDER1 = "/Users/mchu/Documents/TUD/Thesis/DTU/scan24/mesh_depth"
+FOLDER2 = "/Users/mchu/Documents/TUD/Thesis/DTU/scan24/DA3_depth"
 FILE_NAME = "0000.npy"
 
 
@@ -121,8 +123,8 @@ def compare_one(folder1: str, folder2: str, filename: str):
         # Load both depth maps
         depth1 = np.load(file1)
         depth2 = np.load(file2)
-        depth1 = np.clip(depth1, 0, 5)
-        depth2 = np.clip(depth2, 0, 5)
+        # depth1 = np.clip(depth1, 0, 5)
+        # depth2 = np.clip(depth2, 0, 5)
         
         print(f"Comparing: {filename}")
         print(f"File 1 shape: {depth1.shape}, File 2 shape: {depth2.shape}")
