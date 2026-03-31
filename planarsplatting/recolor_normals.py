@@ -66,6 +66,7 @@ def main():
         try:
             # Load depth data
             normal_data = np.load(npy_file)
+            # normal_data = np.transpose(normal_data, [1,2,0])
             assert normal_data.ndim == 3, f"Expected 3D array, got ndim={normal_data.ndim}"
 
             print(f"{normal_data.shape=}")
