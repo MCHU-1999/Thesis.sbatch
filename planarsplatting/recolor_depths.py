@@ -76,7 +76,7 @@ def main():
             # Load depth data
             depth_data = np.load(npy_file)
 
-            # plot_depth_map(depth_data, npy_file.name)
+            plot_depth_map(depth_data, npy_file.name)
             
             # Handle 3D arrays by taking first channel
             if depth_data.ndim == 3:
