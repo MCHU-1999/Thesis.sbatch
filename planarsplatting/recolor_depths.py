@@ -125,8 +125,8 @@ def main():
             # depth_data[depth_data > 4.0] = 0
 
             # plot_threshold_depth_map(depth_data, 4.0, npy_file.name)
-            # plot_depth_map(depth_data, npy_file.name)
-            # continue
+            plot_depth_map(depth_data, npy_file.name)
+            continue
             
             # Normalize depth map
             # depth_data = np.clip(depth_data, 0, 100)

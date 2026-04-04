@@ -17,7 +17,7 @@
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
-DATA_PATH=${MY_STORAGE}/synthetic/box
+DATA_PATH=${MY_STORAGE}/synthetic/Office_1
 
 
 echo "--- Starting PlanarSplatting Training Job ---"
@@ -54,8 +54,8 @@ srun apptainer exec \
     ${SIF_PATH} \
     /opt/conda/envs/planarSplatting/bin/python run_blender.py \
         --data_path ${DATA_PATH} \
-        --out_path planarSplat_ExpRes/SimpleHouse2 \
-        --exp_name SimpleHouse2 \
+        --out_path planarSplat_ExpRes/Office_1 \
+        --exp_name Office_1 \
         --conf_path configs/blender.conf
 
 echo "--- Job finished ---"
