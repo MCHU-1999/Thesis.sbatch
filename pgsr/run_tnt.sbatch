@@ -16,7 +16,7 @@
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PGSR
-SIF_PATH=${MY_STORAGE}/containers/pgsr.sif
+SIF_PATH=${MY_STORAGE}/containers/pgsr2.sif
 
 echo "--- Starting PGSR Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
