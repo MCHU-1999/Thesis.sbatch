@@ -65,12 +65,17 @@ echo 'Installing DA3...'
 /opt/conda/envs/DA3/bin/pip install -e . 
 
 for DATA_PATH in \
-    ${MY_STORAGE}/DTU/scan24 \
-    ${MY_STORAGE}/DTU/scan40 \
-    ${MY_STORAGE}/TNT_GOF/TrainingSet/Barn;
+    ${MY_STORAGE}/Pexels/church-cadeby \
+    ${MY_STORAGE}/Pexels/church-chesterfield \
+    ${MY_STORAGE}/Pexels/clocktower \
+    ${MY_STORAGE}/Pexels/killingbeck-cemetery \
+    ${MY_STORAGE}/Pexels/moskee-haarlem \
+    ${MY_STORAGE}/Pexels/tower-court \
+    ${MY_STORAGE}/Pexels/wotrubakirche \
+    ${MY_STORAGE}/Pexels/yorkshire-post;
 do
     echo \"Running DA3 on \${DATA_PATH}...\"
-    /opt/conda/envs/DA3/bin/python run_da3_simple.py --data_dir \"\${DATA_PATH}\"
+    /opt/conda/envs/DA3/bin/python run_da3_wo_colmap.py --data_dir \"\${DATA_PATH}\"
 done
 "
 echo "--- Job finished ---"
