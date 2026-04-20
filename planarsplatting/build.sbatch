@@ -14,8 +14,8 @@
 # Define the host paths and where they will appear inside the container
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 
-export APPTAINER_TMPDIR=${MY_STORAGE}/.cache/apptainer/cache
-export APPTAINER_CACHEDIR=${MY_STORAGE}/.cache/apptainer/tmp
+export APPTAINER_TMPDIR=${MY_STORAGE}/.cache/apptainer/tmp
+export APPTAINER_CACHEDIR=${MY_STORAGE}/.cache/apptainer/cache
 
 # Remaining job commands go below here. 
 srun --chdir=${MY_STORAGE}/containers apptainer build --fakeroot planarsplatting2.sif planarsplatting2.def 
