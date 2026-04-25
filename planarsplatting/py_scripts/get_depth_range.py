@@ -7,9 +7,12 @@ from PIL import Image
 # IMAGE_FOLDER = "/Users/mchu/Documents/TUD/Thesis/DTU/scan24/images"
 # DEPTH_FOLDER = "/Users/mchu/Documents/TUD/Thesis/DTU/scan24/DA3_depth"
 # MASK_FOLDER = "/Users/mchu/Documents/TUD/Thesis/DTU/scan24/fg_masks"
-IMAGE_FOLDER = "/Users/mchu/Documents/TUD/Thesis/TNT_GOF/TrainingSet/Barn/images"
-DEPTH_FOLDER = "/Users/mchu/Documents/TUD/Thesis/TNT_GOF/TrainingSet/Barn/DA3_depth"
-MASK_FOLDER = "/Users/mchu/Documents/TUD/Thesis/TNT_GOF/TrainingSet/Barn/fg_masks"
+# IMAGE_FOLDER = "/Users/mchu/Documents/TUD/Thesis/TNT_GOF/TrainingSet/Barn/images"
+# DEPTH_FOLDER = "/Users/mchu/Documents/TUD/Thesis/TNT_GOF/TrainingSet/Barn/DA3_depth"
+# MASK_FOLDER = "/Users/mchu/Documents/TUD/Thesis/TNT_GOF/TrainingSet/Barn/fg_masks"
+IMAGE_FOLDER = "/Users/mchu/Documents/TUD/Thesis/Pexels/moskee-haarlem/images"
+DEPTH_FOLDER = "/Users/mchu/Documents/TUD/Thesis/Pexels/moskee-haarlem/DA3_depth"
+MASK_FOLDER = "/Users/mchu/Documents/TUD/Thesis/Pexels/moskee-haarlem/fg_masks"
 
 def _resolve_by_stem(folder: str, stem: str, extensions):
     for ext in extensions:
