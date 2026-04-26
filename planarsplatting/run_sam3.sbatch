@@ -16,8 +16,7 @@
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
-# SIF_PATH=${MY_STORAGE}/containers/planarsplatting2.sif
-SIF_PATH=${MY_STORAGE}/containers/sam3.sif
+SIF_PATH=${MY_STORAGE}/containers/planarsplatting2.sif
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
@@ -52,7 +51,7 @@ srun apptainer exec \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/SAM3/bin/python SAM3/run_pexels.py
+    /opt/conda/envs/planarSplatting/bin/python SAM3/run_pexels.py
 
 # apptainer exec \
 #     --nv \
