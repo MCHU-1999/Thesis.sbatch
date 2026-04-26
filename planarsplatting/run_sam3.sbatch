@@ -52,7 +52,7 @@ srun apptainer exec \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/planarSplatting/bin/python SAM3/run_pexels.py
+    /opt/conda/envs/SAM3/bin/python SAM3/run_pexels.py
 
 # apptainer exec \
 #     --nv \
