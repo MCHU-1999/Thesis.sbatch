@@ -75,7 +75,7 @@ for DATA_PATH in \
     ${MY_STORAGE}/Pexels/yorkshire-post;
 do
     echo \"Running DA3 on \${DATA_PATH}...\"
-    /opt/conda/envs/DA3/bin/python run_da3_wo_colmap.py --data_dir \"\${DATA_PATH}\"
+    /opt/conda/envs/DA3/bin/python run_da3_w_masks.py --data_dir \"\${DATA_PATH}\"
 done
 "
 echo "--- Job finished ---"
