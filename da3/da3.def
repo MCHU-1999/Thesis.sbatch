@@ -1,0 +1,78 @@
+Bootstrap: docker
+From: nvidia/cuda:12.1.0-devel-ubuntu22.04
+
+%files
+    /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/DA3 /opt/DA3
+
+%post
+    # --- 1. System Setup ---
+    apt-get update
+    apt-get install -y --no-install-recommends wget curl git build-essential 
+    apt-get install -y --no-install-recommends unzip cmake ninja-build \
+        libgl1 libgl1-mesa-glx libglib2.0-0 libsm6 libxrender1 libxext6 \
+        libxi6 libx11-6 libegl1-mesa-dev libtiff5
+
+    git config --system --add safe.directory '*'
+
+    # Clean up apt cache to keep image small
+    rm -rf /var/lib/apt/lists/*
+
+    # --- 2. Install Miniconda ---
+    CONDA_INSTALLER="Miniconda3-latest-Linux-x86_64.sh"
+    wget https://repo.anaconda.com/miniconda/${CONDA_INSTALLER}
+    bash ${CONDA_INSTALLER} -b -p /opt/conda
+    rm ${CONDA_INSTALLER}
+
+    export PATH="/opt/conda/bin:$PATH"
+    export TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6"
+
+    # --- 3. Create Conda Environment ---
+    /opt/conda/bin/conda tos accept
+    /opt/conda/bin/conda create -n DA3 python=3.10 -y
+
+    # --- 4. Use Conda Environment Directly ---
+    # Define the specific path to the 'bin' folder of the new env
+    ENV_BIN="/opt/conda/envs/DA3/bin"
+    
+    # --- 5. Install Submodules & Core Libraries ---
+    echo "Active Python: $(${ENV_BIN}/python --version)"
+    echo "Active Pip: $(${ENV_BIN}/pip --version)"
+    
+    # Install ninja in the Python env (just to be safe, even if apt installed it)
+    ${ENV_BIN}/pip install ninja
+
+    # Use xformers 0.0.27 to maintain compatibility with PyTorch 2.3.1
+    # Version 0.0.27 was released specifically to fix the PT 2.3.1 conflict
+    ${ENV_BIN}/pip install \
+        torch==2.3.1 \
+        torchvision==0.18.1 \
+        torchaudio==2.3.1 \
+        xformers==0.0.27 \
+        --index-url https://download.pytorch.org/whl/cu121
+
+    # ${ENV_BIN}/pip install pytorch3d -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py310_cu121_pyt231/download.html
+    # /opt/conda/bin/conda install -n DA3 -y -c conda-forge "libtiff<4.5" pillow
+    
+    # Don't install DA3 now, try installing it in runtime
+    # echo "Installing DA3..."
+    # cd /opt/DA3
+    # ${ENV_BIN}/pip install -e .
+
+    # 6. Final Cleanup
+    ${ENV_BIN}/pip cache purge
+    /opt/conda/bin/conda clean --all -y
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+    cd /
+
+%environment # Runtime variables
+    export PATH="/opt/conda/envs/DA3/bin:/opt/conda/bin:$PATH"
+    export CONDA_DEFAULT_ENV="DA3"
+    export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH" 
+
+%runscript
+    exec /bin/bash "$@"
+
+%labels
+    Author "MCHU"
+    OS "Ubuntu 22.04"
+    CUDA "12.1"

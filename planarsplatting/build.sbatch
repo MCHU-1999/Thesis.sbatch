@@ -17,4 +17,4 @@ MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 # export APPTAINER_CACHEDIR=${MY_STORAGE}/.cache/apptainer
 
 # Remaining job commands go below here. 
-srun --chdir=${MY_STORAGE}/containers apptainer build --fakeroot planarsplatting2.sif planarsplatting2.def 
+srun apptainer build --fakeroot ${MY_STORAGE}/containers/planarsplatting3.sif planarsplatting3.def 

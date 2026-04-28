@@ -1,0 +1,58 @@
+Bootstrap: docker
+From: nvidia/cuda:12.8.0-devel-ubuntu22.04
+
+%post
+    # --- 1. System Setup (Cleaned for 2026 Headless Inference) ---
+    apt-get update && apt-get install -y --no-install-recommends \
+        wget curl git build-essential unzip cmake ninja-build \
+        libgl1 libgl1-mesa-glx libglib2.0-0 ffmpeg
+    
+    git config --system --add safe.directory '*'
+
+    # --- 2. Install Miniconda ---
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    bash miniconda.sh -b -p /opt/conda
+    rm miniconda.sh
+
+    export PATH="/opt/conda/bin:$PATH"
+    # Ensure compilation targets common HPC GPU architectures (A100, RTX series)
+    export TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6"
+
+    # --- 3. Create Environment ---
+    /opt/conda/bin/conda tos accept
+    /opt/conda/bin/conda create -n SAM3 python=3.12 -y
+    ENV_BIN="/opt/conda/envs/SAM3/bin"
+    
+    mkdir -p /opt/constraints
+    printf "setuptools<82\n" > /opt/constraints/pip-constraints.txt
+    export PIP_CONSTRAINT="/opt/constraints/pip-constraints.txt"
+
+    # --- 4. Install PyTorch & OpenCV ---
+    ${ENV_BIN}/pip install torch==2.10.0 torchvision --index-url https://download.pytorch.org/whl/cu128
+
+    # --- 5. Install SAM3 ---
+    cd /opt
+    git clone https://github.com/facebookresearch/sam3.git
+    cd sam3
+    ${ENV_BIN}/pip install ninja opencv-python-headless pandas
+    ${ENV_BIN}/pip install --no-build-isolation -e ".[notebooks]"
+
+    # Cleanup
+    /opt/conda/bin/conda clean --all -y
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+%environment
+    export PATH="/opt/conda/envs/SAM3/bin:/opt/conda/bin:$PATH"
+    export CONDA_DEFAULT_ENV="SAM3"
+    export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+    export PIP_CONSTRAINT="/opt/constraints/pip-constraints.txt"
+    # Essential for GUI-based libs like OpenCV in headless HPC nodes
+    export QT_QPA_PLATFORM=offscreen
+
+%runscript
+    exec /opt/conda/envs/SAM3/bin/python "$@"
+
+%labels
+    Author "MCHU"
+    OS "Ubuntu 22.04"
+    CUDA "12.8"
