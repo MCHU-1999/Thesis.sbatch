@@ -15,4 +15,4 @@
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 
 # Remaining job commands go below here. 
-srun --chdir=${MY_STORAGE}/containers apptainer build --fakeroot dnsplatter.sif dnsplatter.def
+srun apptainer build --fakeroot ${MY_STORAGE}/containers/dnsplatter.sif dnsplatter.def

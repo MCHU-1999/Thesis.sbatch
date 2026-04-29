@@ -15,4 +15,4 @@
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 
 # Remaining job commands go below here. 
-srun --chdir=${MY_STORAGE}/containers apptainer build --fakeroot 3dgs.sif 3dgs.def 
+srun apptainer build --fakeroot ${MY_STORAGE}/containers/3dgs.sif 3dgs.def 

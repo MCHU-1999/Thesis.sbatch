@@ -18,4 +18,4 @@ export APPTAINER_TMPDIR=${MY_STORAGE}/.cache/apptainer/cache
 export APPTAINER_CACHEDIR=${MY_STORAGE}/.cache/apptainer/tmp
 
 # Remaining job commands go below here. 
-srun --chdir=${MY_STORAGE}/containers apptainer build --fakeroot da3_base.sif da3_base.def 
+srun apptainer build --fakeroot ${MY_STORAGE}/containers/da3_base.sif da3_base.def 

@@ -17,4 +17,4 @@ MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 # export APPTAINER_CACHEDIR=${MY_STORAGE}/.cache/apptainer
 
 # Remaining job commands go below here. 
-srun --chdir=${MY_STORAGE}/containers apptainer build --fakeroot sam3.sif sam3.def 
+srun apptainer build --fakeroot ${MY_STORAGE}/containers/sam3.sif sam3.def 

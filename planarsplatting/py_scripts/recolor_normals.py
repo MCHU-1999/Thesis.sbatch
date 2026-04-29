@@ -66,7 +66,7 @@ def main():
         try:
             # Load depth data
             normal_data = np.load(npy_file)
-            # normal_data = np.transpose(normal_data, [1,2,0])
+            normal_data = np.transpose(normal_data, [1,2,0])
             assert normal_data.ndim == 3, f"Expected 3D array, got ndim={normal_data.ndim}"
 
             print(f"{normal_data.shape=}")
@@ -75,10 +75,10 @@ def main():
             print(normal_data[:,:,0])
 
             # plot_normal_map(normal_data)
-            
             # Normalize normals from [-1, 1] to [0, 255] for RGB visualization
             # Each channel (x, y, z) becomes (R, G, B)
-            normal_colored = ((normal_data + 1.0) * 127.5).astype(np.uint8)
+            # normal_colored = ((normal_data + 1.0) * 127.5).astype(np.uint8)
+            normal_colored = (normal_data * 255).astype(np.uint8)
             # OpenCV expects BGR format, so convert RGB to BGR
             normal_colored = cv2.cvtColor(normal_colored, cv2.COLOR_RGB2BGR)
             # Save as PNG in same folder
