@@ -49,9 +49,6 @@ From: nvidia/cuda:12.1.0-devel-ubuntu22.04
         torchaudio==2.3.1 \
         xformers==0.0.27 \
         --index-url https://download.pytorch.org/whl/cu121
-
-    # ${ENV_BIN}/pip install pytorch3d -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py310_cu121_pyt231/download.html
-    # /opt/conda/bin/conda install -n DA3 -y -c conda-forge "libtiff<4.5" pillow
     
     # Don't install DA3 now, try installing it in runtime
     # echo "Installing DA3..."

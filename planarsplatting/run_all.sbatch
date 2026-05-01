@@ -16,7 +16,6 @@
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
-DA3_PATH=${MY_STORAGE}/DA3
 SIF_PATH=${MY_STORAGE}/containers/planarsplatting3.sif
 
 echo "--- Starting PlanarSplatting Training Job ---"
@@ -64,12 +63,12 @@ srun apptainer exec \
     --nv \
     --containall \
     -B /tudelft.net/:/tudelft.net/ \
-    --pwd ${DA3_PATH} \
+    --pwd ${REPO_PATH} \
     ${SIF_PATH} \
     bash -lc "
 set -e
 echo 'Installing DA3...'
-/opt/conda/envs/planarSplatting/bin/pip install -e . 
+/opt/conda/envs/planarSplatting/bin/pip install git+https://github.com/MCHU-1999/DA3.git
 
 for DATA_PATH in \
     ${MY_STORAGE}/Pexels/church-cadeby \
@@ -82,7 +81,7 @@ for DATA_PATH in \
     ${MY_STORAGE}/Pexels/yorkshire-post;
 do
     echo \"Running DA3 on \${DATA_PATH}...\"
-    /opt/conda/envs/planarSplatting/bin/python run_da3_w_masks.py --data_dir \"\${DATA_PATH}\"
+    /opt/conda/envs/planarSplatting/bin/python DA3/run_da3_w_masks.py --data_dir \"\${DATA_PATH}\"
 done
 "
 echo -e "DA3 finished\n\n"

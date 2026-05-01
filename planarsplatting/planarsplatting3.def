@@ -6,8 +6,6 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
     /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/PlanarSplatting/constraints.txt /opt/constraints.txt
     /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/PlanarSplatting/submodules/diff-rect-rasterization /opt/diff-rect-rasterization
     /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/PlanarSplatting/submodules/quaternion-utils /opt/quaternion-utils
-    # DA3
-    /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/DA3 /opt/DA3
 
 %post
     # --- 1. System Setup ---
@@ -59,8 +57,7 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
     echo "Installing Nvdiffrast..."
     ${ENV_BIN}/pip install git+https://github.com/NVlabs/nvdiffrast.git --no-build-isolation
     echo "Installing DA3..."
-    cd /opt/DA3
-    ${ENV_BIN}/pip install -e .
+    ${ENV_BIN}/pip install git+https://github.com/MCHU-1999/DA3.git
 
     # --- 7. Final Cleanup ---
     /opt/conda/bin/conda clean --all -y
