@@ -55,7 +55,7 @@ srun apptainer exec \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
     /opt/conda/envs/planarSplatting/bin/python SAM3/run_pexels.py
-echo "SAM3 finished"
+echo -e "SAM3 finished\n\n"
 
 
 # --- 2. Run DA3 ---
@@ -85,7 +85,7 @@ do
     /opt/conda/envs/planarSplatting/bin/python run_da3_w_masks.py --data_dir \"\${DATA_PATH}\"
 done
 "
-echo "DA3 finished"
+echo -e "DA3 finished\n\n"
 
 
 # --- 3. Run PlanarSplatting ---
@@ -97,7 +97,7 @@ srun apptainer exec \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
     /opt/conda/envs/planarSplatting/bin/python run_pexels.py
-echo "PlanarSplatting finished"
+echo -e "PlanarSplatting finished\n\n"
 
 
 echo "--- Job finished ---"
