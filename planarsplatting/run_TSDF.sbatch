@@ -15,7 +15,7 @@
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
-SIF_PATH=${MY_STORAGE}/containers/planarsplatting.sif
+SIF_PATH=${MY_STORAGE}/containers/planarsplatting2.sif
 DATA_PATH=${MY_STORAGE}/DTU/scan40
 
 echo "--- Starting PlanarSplatting Training Job ---"

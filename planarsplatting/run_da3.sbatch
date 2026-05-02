@@ -16,7 +16,8 @@
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/DA3
-SIF_PATH=${MY_STORAGE}/containers/planarsplatting3.sif
+SIF_PATH=${MY_STORAGE}/containers/planarsplatting2.sif
+# SIF_PATH=${MY_STORAGE}/containers/planarsplatting3.sif
 
 echo "--- Starting DA3 Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"

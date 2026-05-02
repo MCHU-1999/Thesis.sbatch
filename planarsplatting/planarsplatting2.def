@@ -4,7 +4,6 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
 %files
     /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/PlanarSplatting/requirements.txt /opt/requirements.txt
     /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/PlanarSplatting/constraints.txt /opt/constraints.txt
-    # Copy submodules if you have them locally; otherwise git cloning in %post is often safer/easier
     /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/PlanarSplatting/submodules/diff-rect-rasterization /opt/diff-rect-rasterization
     /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/PlanarSplatting/submodules/quaternion-utils /opt/quaternion-utils
 
