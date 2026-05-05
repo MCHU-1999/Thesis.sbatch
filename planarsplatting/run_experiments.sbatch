@@ -2,10 +2,10 @@
 
 #SBATCH --partition=general  # Request partition. Default is 'general'
 #SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
-#SBATCH --time=2:30:00       # Request run time (wall-clock) per job.
+#SBATCH --time=4:00:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
-#SBATCH --cpus-per-task=4    # Request number of CPUs (threads) per task.
-#SBATCH --mem=32GB           # Request memory per node.
+#SBATCH --cpus-per-task=8    # Request number of CPUs (threads) per task.
+#SBATCH --mem=48GB           # Request memory per node.
 #SBATCH --mail-type=END      # Set mail type to 'END' to receive a mail when the job finishes.
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
@@ -16,7 +16,7 @@
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
-SIF_PATH=${MY_STORAGE}/containers/planarsplatting2.sif
+SIF_PATH=${MY_STORAGE}/containers/planarsplatting3.sif
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
@@ -40,15 +40,26 @@ ulimit -n 60000
 export TORCH_HOME=${MY_STORAGE}/.cache
 export APPTAINERENV_TORCH_HOME=${MY_STORAGE}/.cache
 export APPTAINERENV_LD_LIBRARY_PATH="/usr/lib64:${LD_LIBRARY_PATH}"
+export APPTAINERENV_HF_HOME=${MY_STORAGE}/.cache/huggingface
+export APPTAINERENV_HF_HUB_CACHE=${MY_STORAGE}/.cache/huggingface/hub
+export APPTAINERENV_TRANSFORMERS_CACHE=${MY_STORAGE}/.cache/huggingface/hub
 
-# --- Training Command ---
-echo "Running command..."
+
+echo "--- Job started ---"
+
 srun apptainer exec \
     --nv \
     --containall \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/planarSplatting/bin/python run_experiments.py
+    bash -lc "
+set -e
+echo 'Installing DA3...'
+/opt/conda/envs/planarSplatting/bin/pip install git+https://github.com/MCHU-1999/DA3.git
+
+echo 'Running experiments on all scenes'
+/opt/conda/envs/planarSplatting/bin/python run_experiments.py
+"
 
 echo "--- Job finished ---"
