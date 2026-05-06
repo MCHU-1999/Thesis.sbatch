@@ -2,7 +2,7 @@
 
 #SBATCH --partition=general  # Request partition. Default is 'general'
 #SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
-#SBATCH --time=0:20:00       # Request run time (wall-clock) per job.
+#SBATCH --time=0:30:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
 #SBATCH --cpus-per-task=8    # Request number of CPUs (threads) per task.
 #SBATCH --mem=16GB           # Request memory per node.
@@ -16,7 +16,7 @@
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 REPO_PATH=${MY_STORAGE}/PlanarSplatting
-SIF_PATH=${MY_STORAGE}/containers/planarsplatting3.sif
+SIF_PATH=${MY_STORAGE}/containers/planarsplatting4.sif
 
 echo "--- Starting PlanarSplatting Training Job ---"
 echo "Job ID: ${SLURM_JOB_ID}"
