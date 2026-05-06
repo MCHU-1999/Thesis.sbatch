@@ -48,7 +48,7 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
     ${ENV_BIN}/pip install --no-build-isolation -e ".[notebooks]"
     # Optional dependencies for faster inference
     ${ENV_BIN}/pip install flash-attn-3 --no-deps --index-url https://download.pytorch.org/whl/cu128
-    ${ENV_BIN}/pip install git+https://github.com/ronghanghu/cc_torch.git
+    ${ENV_BIN}/pip install --no-build-isolation git+https://github.com/ronghanghu/cc_torch.git
 
     # --- 6. Install PlanarSplatting Submodules ---
     echo "Installing diff-rect-rasterization..."
