@@ -1,0 +1,82 @@
+Bootstrap: docker
+From: nvidia/cuda:12.8.0-devel-ubuntu22.04
+
+%files
+    /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/PlanarSplatting/requirements.txt /opt/requirements.txt
+    /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/PlanarSplatting/constraints.txt /opt/constraints.txt
+    /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/PlanarSplatting/submodules/diff-rect-rasterization /opt/diff-rect-rasterization
+    /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/PlanarSplatting/submodules/quaternion-utils /opt/quaternion-utils
+
+%post
+    # --- 1. System Setup ---
+    apt-get update
+    apt-get install -y --no-install-recommends wget curl git build-essential 
+    apt-get install -y --no-install-recommends unzip cmake ninja-build \
+        libgl1 libgl1-mesa-glx libglib2.0-0 libsm6 libxrender1 libxext6 \
+        libxi6 libx11-6 libegl1-mesa-dev libtiff5
+
+    git config --system --add safe.directory '*'
+
+    # Clean up apt cache to keep image small
+    rm -rf /var/lib/apt/lists/*
+
+    # --- 2. Install Miniconda ---
+    CONDA_INSTALLER="Miniconda3-latest-Linux-x86_64.sh"
+    wget https://repo.anaconda.com/miniconda/${CONDA_INSTALLER}
+    bash ${CONDA_INSTALLER} -b -p /opt/conda
+    rm ${CONDA_INSTALLER}
+
+    export PATH="/opt/conda/bin:$PATH"
+    export TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6"
+
+    # --- 3. Create Conda Environment ---
+    /opt/conda/bin/conda tos accept
+    /opt/conda/bin/conda create -n planarSplatting python=3.12 -y
+    # Define the specific path to the 'bin' folder of the new env
+    ENV_BIN="/opt/conda/envs/planarSplatting/bin"
+    export PIP_CONSTRAINT=/opt/constraints.txt
+    
+    # --- 4. Install torch ---
+    ${ENV_BIN}/pip install torch==2.10.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+    ${ENV_BIN}/pip install -r /opt/requirements.txt
+
+    # --- 5. Install SAM ---
+    cd /opt
+    git clone https://github.com/facebookresearch/sam3.git
+    cd sam3
+    ${ENV_BIN}/pip install ninja opencv-python-headless
+    ${ENV_BIN}/pip install --no-build-isolation -e ".[notebooks]"
+    # Optional dependencies for faster inference
+    pip install flash-attn-3 --no-deps --index-url https://download.pytorch.org/whl/cu128
+    pip install git+https://github.com/ronghanghu/cc_torch.git
+
+    # --- 6. Install PlanarSplatting Submodules ---
+    echo "Installing diff-rect-rasterization..."
+    cd /opt/diff-rect-rasterization/
+    ${ENV_BIN}/pip install --no-build-isolation .
+    echo "Installing quaternion-utils..."
+    cd /opt/quaternion-utils/
+    ${ENV_BIN}/pip install --no-build-isolation .
+    echo "Installing Nvdiffrast..."
+    ${ENV_BIN}/pip install git+https://github.com/NVlabs/nvdiffrast.git --no-build-isolation
+    echo "Installing DA3..."
+    ${ENV_BIN}/pip install git+https://github.com/MCHU-1999/DA3.git
+
+    # --- 7. Final Cleanup ---
+    /opt/conda/bin/conda clean --all -y
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+    cd /
+
+# Runtime variables
+%environment
+    export PATH="/opt/conda/envs/planarSplatting/bin:/opt/conda/bin:$PATH"
+    export CONDA_DEFAULT_ENV="planarSplatting"
+    export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH" 
+
+%runscript
+    exec /bin/bash "$@"
+
+%labels
+    Author "MCHU"
+    OS "Ubuntu 22.04"
+    CUDA "12.8"
