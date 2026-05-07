@@ -51,14 +51,6 @@ srun apptainer exec \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/planarSplatting/bin/python SAM3/run_pexels.py
-
-# apptainer exec \
-#     --nv \
-#     --containall \
-#     -B /tudelft.net/:/tudelft.net/ \
-#     --pwd /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/PlanarSplatting \
-#     /tudelft.net/staff-umbrella/Deep3D/mingchiehhu/containers/planarsplatting2.sif \
-#     /opt/conda/envs/planarSplatting/bin/python SAM3/run_pexels.py
+    /opt/conda/envs/planarSplatting/bin/python SAM3/inference_all_dtu.py
 
 echo "--- Job finished ---"
