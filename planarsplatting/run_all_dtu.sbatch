@@ -59,7 +59,7 @@ echo 'Installing DA3...'
 /opt/conda/envs/planarSplatting/bin/pip install git+https://github.com/MCHU-1999/DA3.git
 
 echo 'Running experiments on all scenes'
-/opt/conda/envs/planarSplatting/bin/python run_inference_all_dtu.py
+/opt/conda/envs/planarSplatting/bin/python run_experiments_all_dtu.py
 "
 
 echo "--- Job finished ---"
