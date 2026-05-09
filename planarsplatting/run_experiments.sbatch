@@ -53,13 +53,21 @@ srun apptainer exec \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    bash -lc "
-set -e
-echo 'Installing DA3...'
-/opt/conda/envs/planarSplatting/bin/pip install git+https://github.com/MCHU-1999/DA3.git
+    /opt/conda/envs/planarSplatting/bin/python run_experiments_3_stage.py
 
-echo 'Running experiments on all scenes'
-/opt/conda/envs/planarSplatting/bin/python run_experiments_3_stage.py
-"
+# srun apptainer exec \
+#     --nv \
+#     --containall \
+#     -B /tudelft.net/:/tudelft.net/ \
+#     --pwd ${REPO_PATH} \
+#     ${SIF_PATH} \
+#     bash -lc "
+# set -e
+# echo 'Installing DA3...'
+# /opt/conda/envs/planarSplatting/bin/pip install git+https://github.com/MCHU-1999/DA3.git
+
+# echo 'Running experiments on all scenes'
+# /opt/conda/envs/planarSplatting/bin/python run_experiments_3_stage.py
+# "
 
 echo "--- Job finished ---"
