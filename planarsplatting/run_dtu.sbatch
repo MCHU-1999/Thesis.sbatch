@@ -2,7 +2,7 @@
 
 #SBATCH --partition=general  # Request partition. Default is 'general'
 #SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
-#SBATCH --time=1:00:00       # Request run time (wall-clock) per job.
+#SBATCH --time=3:30:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
 #SBATCH --cpus-per-task=8    # Request number of CPUs (threads) per task.
 #SBATCH --mem=32GB           # Request memory per node.
@@ -53,21 +53,13 @@ srun apptainer exec \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    /opt/conda/envs/planarSplatting/bin/python run_experiments_3_stage.py
+    bash -lc "
+set -e
+echo 'Installing DA3...'
+/opt/conda/envs/planarSplatting/bin/pip install git+https://github.com/MCHU-1999/DA3.git
 
-# srun apptainer exec \
-#     --nv \
-#     --containall \
-#     -B /tudelft.net/:/tudelft.net/ \
-#     --pwd ${REPO_PATH} \
-#     ${SIF_PATH} \
-#     bash -lc "
-# set -e
-# echo 'Installing DA3...'
-# /opt/conda/envs/planarSplatting/bin/pip install git+https://github.com/MCHU-1999/DA3.git
-
-# echo 'Running experiments on all scenes'
-# /opt/conda/envs/planarSplatting/bin/python run_experiments_3_stage.py
-# "
+echo 'Running experiments on all scenes'
+/opt/conda/envs/planarSplatting/bin/python run_experiments_all_dtu.py
+"
 
 echo "--- Job finished ---"
