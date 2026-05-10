@@ -10,8 +10,8 @@
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=slurm_exp_%j.out
-#SBATCH --error=slurm_exp_%j.err
+#SBATCH --output=pexels_exp_%j.out
+#SBATCH --error=pexels_exp_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
