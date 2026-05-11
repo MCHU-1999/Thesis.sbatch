@@ -122,6 +122,7 @@ def main():
         try:
             # Load depth data
             depth_data = np.load(npy_file)
+            print(f"{np.max(depth_data)=}")
 
             # plot_threshold_depth_map(depth_data, 4.0, npy_file.name)
             plot_depth_map(depth_data, npy_file.name)
