@@ -10,8 +10,8 @@
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=dtu_exp_%j.out
-#SBATCH --error=dtu_exp_%j.err
+#SBATCH --output=tnt_exp_%j.out
+#SBATCH --error=tnt_exp_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
