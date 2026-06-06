@@ -4,10 +4,9 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
 %post
     export DEBIAN_FRONTEND=noninteractive
     
-# 1. Install all recommended dependencies (added libqt6svg6-dev)
+    # 1. Install all dependencies (REMOVED cmake from apt)
     apt-get update && apt-get install -y --no-install-recommends \
         git \
-        cmake \
         ninja-build \
         build-essential \
         libboost-program-options-dev \
@@ -33,20 +32,25 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
         libcurl4-openssl-dev \
         libssl-dev \
         libmkl-full-dev \
+        wget \
         ca-certificates \
         && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-    # Fix issue in Ubuntu's openimageio CMake config per official docs
+    # 2. Install modern CMake (v3.29.3) to satisfy Faiss >= 3.24.0 requirement
+    wget https://github.com/Kitware/CMake/releases/download/v3.29.3/cmake-3.29.3-linux-x86_64.tar.gz
+    tar -zxvf cmake-3.29.3-linux-x86_64.tar.gz --strip-components=1 -C /usr/local
+    rm cmake-3.29.3-linux-x86_64.tar.gz
+
+    # Fix issue in Ubuntu's openimageio CMake config
     mkdir -p /usr/include/opencv4
 
-    # 2. Clone COLMAP
+    # 3. Clone COLMAP
     git clone https://github.com/colmap/colmap.git /opt/colmap
     cd /opt/colmap
     
-    # 3. Configure and compile
+    # 4. Configure and compile
     mkdir build && cd build
     
-    # Use Ninja, MKL flag, and enable CUDA
     cmake .. -GNinja \
         -DBLA_VENDOR=Intel10_64lp \
         -DCMAKE_BUILD_TYPE=Release \
