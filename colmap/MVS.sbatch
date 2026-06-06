@@ -15,7 +15,7 @@
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
-DATA_PATH=${MY_STORAGE}/synthetic/WoodenHouse
+DATA_PATH=${MY_STORAGE}/colmap_test/Barn
 SIF_PATH=${MY_STORAGE}/containers/colmap.sif 
 
 echo "--- Starting COLMAP MVS Job ---"
