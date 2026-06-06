@@ -55,7 +55,7 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
     cmake .. -GNinja \
         -DCMAKE_BUILD_TYPE=Release \
         -DCUDA_ENABLED=ON \
-        -DCMAKE_CUDA_ARCHITECTURES=native
+        -DCMAKE_CUDA_ARCHITECTURES=86
         
     ninja
     ninja install
