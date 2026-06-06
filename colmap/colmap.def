@@ -4,7 +4,7 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
 %post
     export DEBIAN_FRONTEND=noninteractive
     
-    # 1. Install all dependencies (REMOVED cmake from apt)
+    # 1. Install dependencies
     apt-get update && apt-get install -y --no-install-recommends \
         git \
         ninja-build \
@@ -31,12 +31,13 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
         libsuitesparse-dev \
         libcurl4-openssl-dev \
         libssl-dev \
-        libmkl-full-dev \
+        libopenblas-dev \
+        liblapack-dev \
         wget \
         ca-certificates \
         && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-    # 2. Install modern CMake (v3.29.3) to satisfy Faiss >= 3.24.0 requirement
+    # 2. Install modern CMake (v3.29.3)
     wget https://github.com/Kitware/CMake/releases/download/v3.29.3/cmake-3.29.3-linux-x86_64.tar.gz
     tar -zxvf cmake-3.29.3-linux-x86_64.tar.gz --strip-components=1 -C /usr/local
     rm cmake-3.29.3-linux-x86_64.tar.gz
@@ -52,9 +53,9 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
     mkdir build && cd build
     
     cmake .. -GNinja \
-        -DBLA_VENDOR=Intel10_64lp \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCUDA_ENABLED=ON
+        -DCUDA_ENABLED=ON \
+        -DCMAKE_CUDA_ARCHITECTURES=native
         
     ninja
     ninja install
