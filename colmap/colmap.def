@@ -4,7 +4,7 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
 %post
     export DEBIAN_FRONTEND=noninteractive
     
-    # 1. Install all recommended dependencies from the official docs
+# 1. Install all recommended dependencies (added libopenexr-dev)
     apt-get update && apt-get install -y --no-install-recommends \
         git \
         cmake \
@@ -16,6 +16,7 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
         libeigen3-dev \
         libopenimageio-dev \
         openimageio-tools \
+        libopenexr-dev \
         libmetis-dev \
         libgoogle-glog-dev \
         libgtest-dev \
