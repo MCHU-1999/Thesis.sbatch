@@ -4,7 +4,7 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
 %post
     export DEBIAN_FRONTEND=noninteractive
     
-# 1. Install all recommended dependencies (added libopenexr-dev)
+# 1. Install all recommended dependencies (added libqt6svg6-dev)
     apt-get update && apt-get install -y --no-install-recommends \
         git \
         cmake \
@@ -26,6 +26,7 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
         qt6-base-dev \
         libqt6opengl6-dev \
         libqt6openglwidgets6 \
+        libqt6svg6-dev \
         libcgal-dev \
         libceres-dev \
         libsuitesparse-dev \
