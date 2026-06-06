@@ -1,25 +1,21 @@
 #!/bin/sh
 
-#SBATCH --partition=general
-#SBATCH --qos=short
-#SBATCH --time=4:00:00       # 4 hours is usually plenty for COLMAP
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8    # Increased CPUs for faster matching
-#SBATCH --mem=64GB           # 32GB is sufficient for conversion
-#SBATCH --mail-type=END
+#SBATCH --partition=general  # Request partition. Default is 'general'
+#SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
+#SBATCH --time=4:00:00       # Request run time (wall-clock) per job.
+#SBATCH --ntasks=1           # Request number of parallel tasks per job.
+#SBATCH --cpus-per-task=8    # Request number of CPUs (threads) per task.
+#SBATCH --mem=32GB           # Request memory per node.
+#SBATCH --mail-type=END      # Set mail type to 'END' to receive a mail when the job finishes.
+#SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # Set output/error logs
-#SBATCH --output=slurm_colmap_%j.out
-#SBATCH --error=slurm_colmap_%j.err
+#SBATCH --output=slurm_sfm_%j.out
+#SBATCH --error=slurm_sfm_%j.err
 
 # --- Configuration ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
-REPO_PATH=${MY_STORAGE}/runs/colmap
-
-# CHANGE THIS to the folder containing your 'input' subfolder
 DATA_PATH=${MY_STORAGE}/synthetic/WoodenHouse
-
-# CHANGE THIS to point to the new container you built
 SIF_PATH=${MY_STORAGE}/containers/colmap.sif 
 
 echo "--- Starting COLMAP Processing Job ---"
@@ -31,21 +27,25 @@ echo "Container: ${SIF_PATH}"
 echo "Loading modules..."
 module purge
 module use /opt/insy/modulefiles
+module load apptainer
 
 # --- Execution Command ---
-echo "Running convert.py..."
+echo "Running COLMAP SfM..."
 
-# Note:
-# 1. We use 'python3' (standard in the colmap container).
-# 2. We added '--camera PINHOLE' for your synthetic Rhino data.
+# 1. Feature Extraction (uses GPU)
+apptainer exec --nv ${SIF_PATH} colmap feature_extractor \
+    --database_path ${DATA_PATH}/database.db \
+    --image_path ${DATA_PATH}/images
 
-srun --chdir=${REPO_PATH} apptainer exec \
-    -B $HOME:$HOME \
-    -B /tudelft.net/:/tudelft.net/ \
-    ${SIF_PATH} \
-    python3 convert.py \
-        -s "${DATA_PATH}" \
-        --camera PINHOLE \
-        --no_gpu
+# 2. Feature Matching (uses GPU)
+apptainer exec --nv ${SIF_PATH} colmap exhaustive_matcher \
+    --database_path ${DATA_PATH}/database.db
 
-echo "--- COLMAP job finished ---"
+# 3. Sparse Mapping (CPU intensive)
+mkdir -p ${DATA_PATH}/sparse
+apptainer exec --nv ${SIF_PATH} colmap mapper \
+    --database_path ${DATA_PATH}/database.db \
+    --image_path ${DATA_PATH}/images \
+    --output_path ${DATA_PATH}/sparse
+
+echo "--- COLMAP SfM job finished ---"

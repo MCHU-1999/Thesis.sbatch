@@ -1,29 +1,61 @@
 Bootstrap: docker
-From: colmap/colmap:latest
+From: nvidia/cuda:12.8.0-devel-ubuntu22.04
 
 %post
-    # Update and install dependencies required for the convert.py script
+    export DEBIAN_FRONTEND=noninteractive
+    
+    # 1. Install all recommended dependencies from the official docs
     apt-get update && apt-get install -y --no-install-recommends \
-        python3 \
-        python3-pip \
-        imagemagick \
-        ffmpeg
+        git \
+        cmake \
+        ninja-build \
+        build-essential \
+        libboost-program-options-dev \
+        libboost-graph-dev \
+        libboost-system-dev \
+        libeigen3-dev \
+        libopenimageio-dev \
+        openimageio-tools \
+        libmetis-dev \
+        libgoogle-glog-dev \
+        libgtest-dev \
+        libgmock-dev \
+        libsqlite3-dev \
+        libglew-dev \
+        qt6-base-dev \
+        libqt6opengl6-dev \
+        libqt6openglwidgets6 \
+        libcgal-dev \
+        libceres-dev \
+        libsuitesparse-dev \
+        libcurl4-openssl-dev \
+        libssl-dev \
+        libmkl-full-dev \
+        ca-certificates \
+        && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-    # clean up to reduce image size
-    apt-get clean
-    rm -rf /var/lib/apt/lists/*
+    # Fix issue in Ubuntu's openimageio CMake config per official docs
+    mkdir -p /usr/include/opencv4
+
+    # 2. Clone COLMAP
+    git clone https://github.com/colmap/colmap.git /opt/colmap
+    cd /opt/colmap
+    
+    # 3. Configure and compile
+    mkdir build && cd build
+    
+    # Use Ninja, MKL flag, and enable CUDA
+    cmake .. -GNinja \
+        -DBLA_VENDOR=Intel10_64lp \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCUDA_ENABLED=ON
+        
+    ninja
+    ninja install
 
 %environment
-    # Ensure standard locale settings to avoid encoding errors
-    export LC_ALL=C
-    # Ensure COLMAP can find the libraries
-    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
 %runscript
-    # Default command when running the container
     exec colmap "$@"
-
-%labels
-    Author YouMCHUrName
-    Version v1.0
-    Description COLMAP container with Python and ImageMagick for Gaussian Splatting
