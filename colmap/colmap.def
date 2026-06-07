@@ -60,6 +60,13 @@ From: nvidia/cuda:12.8.0-devel-ubuntu22.04
     ninja
     ninja install
 
+    # 5. Fix Qt6 ABI Tag issue for older HPC host kernels
+    REAL_QT_PATH=$(realpath /usr/lib/x86_64-linux-gnu/libQt6Core.so.6)
+    strip --remove-section=.note.ABI-tag "$REAL_QT_PATH"
+    
+    # Refresh shared library cache
+    ldconfig
+
 %environment
     export PATH=/usr/local/bin:$PATH
     export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH

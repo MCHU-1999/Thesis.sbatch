@@ -27,7 +27,6 @@ echo "Container: ${SIF_PATH}"
 echo "Loading modules..."
 module purge
 module use /opt/insy/modulefiles
-module load apptainer
 
 # --- Execution Command ---
 echo "Running COLMAP SfM..."
