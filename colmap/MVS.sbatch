@@ -1,10 +1,10 @@
 #!/bin/sh
 
 #SBATCH --partition=general  # Request partition. Default is 'general'
-#SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
-#SBATCH --time=4:00:00       # Request run time (wall-clock) per job.
+#SBATCH --qos=medium         # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
+#SBATCH --time=8:00:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
-#SBATCH --cpus-per-task=8    # Request number of CPUs (threads) per task.
+#SBATCH --cpus-per-task=16   # Request number of CPUs (threads) per task.
 #SBATCH --mem=32GB           # Request memory per node.
 #SBATCH --mail-type=END      # Set mail type to 'END' to receive a mail when the job finishes.
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
@@ -53,7 +53,8 @@ srun apptainer exec \
     colmap patch_match_stereo \
         --workspace_path ${DATA_PATH}/dense \
         --workspace_format COLMAP \
-        --PatchMatchStereo.geom_consistency true
+        --PatchMatchStereo.geom_consistency true \
+        --PatchMatchStereo.max_image_size 1024
 
 # 3. Stereo Fusion (Fuses depth maps to point cloud)
 srun apptainer exec \
