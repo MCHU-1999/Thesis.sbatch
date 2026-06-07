@@ -32,19 +32,35 @@ module use /opt/insy/modulefiles
 echo "Running COLMAP SfM..."
 
 # 1. Feature Extraction (uses GPU)
-srun apptainer exec --nv ${SIF_PATH} colmap feature_extractor \
-    --database_path ${DATA_PATH}/database.db \
-    --image_path ${DATA_PATH}/images
+
+srun apptainer exec \
+    --nv \
+    -B /tudelft.net/:/tudelft.net/ \
+    --pwd ${DATA_PATH} \
+    ${SIF_PATH} \
+    colmap feature_extractor \
+        --database_path ${DATA_PATH}/database.db \
+        --image_path ${DATA_PATH}/images
 
 # 2. Feature Matching (uses GPU)
-srun apptainer exec --nv ${SIF_PATH} colmap exhaustive_matcher \
-    --database_path ${DATA_PATH}/database.db
+srun apptainer exec \
+    --nv \
+    -B /tudelft.net/:/tudelft.net/ \
+    --pwd ${DATA_PATH} \
+    ${SIF_PATH} \
+    colmap exhaustive_matcher \
+        --database_path ${DATA_PATH}/database.db
 
 # 3. Sparse Mapping (CPU intensive)
 mkdir -p ${DATA_PATH}/sparse
-srun apptainer exec --nv ${SIF_PATH} colmap mapper \
-    --database_path ${DATA_PATH}/database.db \
-    --image_path ${DATA_PATH}/images \
-    --output_path ${DATA_PATH}/sparse
+srun apptainer exec \
+    --nv \
+    -B /tudelft.net/:/tudelft.net/ \
+    --pwd ${DATA_PATH} \
+    ${SIF_PATH} \
+    colmap mapper \
+        --database_path ${DATA_PATH}/database.db \
+        --image_path ${DATA_PATH}/images \
+        --output_path ${DATA_PATH}/sparse
 
 echo "--- COLMAP SfM job finished ---"

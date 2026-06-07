@@ -33,23 +33,38 @@ echo "Running COLMAP MVS..."
 
 # 1. Image Undistortion (Reads from sparse/0)
 mkdir -p ${DATA_PATH}/dense
-srun apptainer exec --nv ${SIF_PATH} colmap image_undistorter \
-    --image_path ${DATA_PATH}/images \
-    --input_path ${DATA_PATH}/sparse/0 \
-    --output_path ${DATA_PATH}/dense \
-    --output_type COLMAP
+srun apptainer exec \
+    --nv \
+    -B /tudelft.net/:/tudelft.net/ \
+    --pwd ${DATA_PATH} \
+    ${SIF_PATH} \
+    colmap image_undistorter \
+        --image_path ${DATA_PATH}/images \
+        --input_path ${DATA_PATH}/sparse/0 \
+        --output_path ${DATA_PATH}/dense \
+        --output_type COLMAP
 
 # 2. Patch Match Stereo (Heavy GPU usage)
-srun apptainer exec --nv ${SIF_PATH} colmap patch_match_stereo \
-    --workspace_path ${DATA_PATH}/dense \
-    --workspace_format COLMAP \
-    --PatchMatchStereo.geom_consistency true
+srun apptainer exec \
+    --nv \
+    -B /tudelft.net/:/tudelft.net/ \
+    --pwd ${DATA_PATH} \
+    ${SIF_PATH} \
+    colmap patch_match_stereo \
+        --workspace_path ${DATA_PATH}/dense \
+        --workspace_format COLMAP \
+        --PatchMatchStereo.geom_consistency true
 
 # 3. Stereo Fusion (Fuses depth maps to point cloud)
-srun apptainer exec --nv ${SIF_PATH} colmap stereo_fusion \
-    --workspace_path ${DATA_PATH}/dense \
-    --workspace_format COLMAP \
-    --input_type geometric \
-    --output_path ${DATA_PATH}/dense/fused.ply
+srun apptainer exec \
+    --nv \
+    -B /tudelft.net/:/tudelft.net/ \
+    --pwd ${DATA_PATH} \
+    ${SIF_PATH} \
+    colmap stereo_fusion \
+        --workspace_path ${DATA_PATH}/dense \
+        --workspace_format COLMAP \
+        --input_type geometric \
+        --output_path ${DATA_PATH}/dense/fused.ply
 
 echo "--- COLMAP MVS job finished ---"
