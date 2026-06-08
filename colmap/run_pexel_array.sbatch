@@ -1,11 +1,13 @@
 #!/bin/sh
 
-#SBATCH --partition=general
-#SBATCH --time=12:00:00      # 12 hours to safely cover both SfM and MVS
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16   # 16 CPU threads for heavy CPU steps (Mapper, Fusion)
-#SBATCH --mem=32GB
-#SBATCH --gres=gpu:a40:1
+#SBATCH --partition=general  # Request partition. Default is 'general'
+#SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
+#SBATCH --time=4:00:00       # Request run time (wall-clock) per job.
+#SBATCH --ntasks=1           # Request number of parallel tasks per job.
+#SBATCH --cpus-per-task=16   # Request number of CPUs (threads) per task.
+#SBATCH --mem=32GB           # Request memory per node.
+#SBATCH --mail-type=END      # Set mail type to 'END' to receive a mail when the job finishes.
+#SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
 
 # --- ARRAY CONFIGURATION ---
 # 0-8 creates exactly 9 jobs. 
