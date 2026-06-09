@@ -49,6 +49,7 @@ echo "Data Path: ${DATA_PATH}"
 # Ensure base directories exist and are clean
 rm -rf ${DATA_PATH}/dense
 rm -rf ${DATA_PATH}/sparse_fixed
+rm -f ${DATA_PATH}/database.db
 mkdir -p ${DATA_PATH}/dense
 mkdir -p ${DATA_PATH}/sparse_fixed
 
@@ -59,7 +60,8 @@ echo "[1/6] Feature Extraction..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
     colmap feature_extractor \
         --database_path ${DATA_PATH}/database.db \
-        --image_path ${DATA_PATH}/images
+        --image_path ${DATA_PATH}/images \
+        --ImageReader.camera_model PINHOLE
 
 echo "[2/6] Feature Matching..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
