@@ -47,6 +47,7 @@ echo "Array Job ID: ${SLURM_ARRAY_JOB_ID} | Task ID: ${SLURM_ARRAY_TASK_ID}"
 echo "Data Path: ${DATA_PATH}"
 
 # Ensure base directories exist
+rm -rf ${DATA_PATH}/dense
 mkdir -p ${DATA_PATH}/dense
 
 # ==========================================
