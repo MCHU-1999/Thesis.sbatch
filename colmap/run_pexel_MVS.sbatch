@@ -49,12 +49,25 @@ echo "Data Path: ${DATA_PATH}"
 # Ensure base directories exist and are clean
 rm -rf ${DATA_PATH}/dense
 rm -rf ${DATA_PATH}/sparse_fixed
+rm -rf ${DATA_PATH}/DA3_poses_only
 rm -f ${DATA_PATH}/database.db
+
 mkdir -p ${DATA_PATH}/dense
 mkdir -p ${DATA_PATH}/sparse_fixed
+mkdir -p ${DATA_PATH}/DA3_poses_only
 
 # ==========================================
-# PHASE 1: FIX DA3 EXPORT (Build Covisibility Graph)
+# PRE-PHASE: STRIP DA3 POINTS
+# ==========================================
+echo "[0/6] Isolating DA3 Cameras and Poses..."
+# Copy only the pose and intrinsic data
+cp ${DATA_PATH}/DA3_colmap/cameras.bin ${DATA_PATH}/DA3_poses_only/
+cp ${DATA_PATH}/DA3_colmap/images.bin ${DATA_PATH}/DA3_poses_only/
+# Create a blank points file so COLMAP doesn't throw a missing file error
+touch ${DATA_PATH}/DA3_poses_only/points3D.txt
+
+# ==========================================
+# PHASE 1: BUILD COVISIBILITY GRAPH
 # ==========================================
 echo "[1/6] Feature Extraction..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
@@ -73,7 +86,7 @@ srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF
     colmap point_triangulator \
         --database_path ${DATA_PATH}/database.db \
         --image_path ${DATA_PATH}/images \
-        --input_path ${DATA_PATH}/DA3_colmap \
+        --input_path ${DATA_PATH}/DA3_poses_only \
         --output_path ${DATA_PATH}/sparse_fixed \
         --clear_points 1
 
