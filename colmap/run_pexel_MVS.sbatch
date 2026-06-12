@@ -59,12 +59,17 @@ mkdir -p ${DATA_PATH}/DA3_poses_only
 # ==========================================
 # PRE-PHASE: STRIP DA3 POINTS
 # ==========================================
-echo "[0/6] Isolating DA3 Cameras and Poses..."
-# Copy only the pose and intrinsic data
-cp ${DATA_PATH}/DA3_colmap/cameras.bin ${DATA_PATH}/DA3_poses_only/
-cp ${DATA_PATH}/DA3_colmap/images.bin ${DATA_PATH}/DA3_poses_only/
-# Create a blank points file so COLMAP doesn't throw a missing file error
-touch ${DATA_PATH}/DA3_poses_only/points3D.txt
+echo "[0/6] Converting DA3 Model and Stripping Points..."
+
+# 1. Convert the DA3 binary model to text format into our staging folder
+srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
+    colmap model_converter \
+        --input_path ${DATA_PATH}/DA3_colmap \
+        --output_path ${DATA_PATH}/DA3_poses_only \
+        --output_type TXT
+
+# 2. Completely empty the points3D.txt file to delete DA3's bad points
+> ${DATA_PATH}/DA3_poses_only/points3D.txt
 
 # ==========================================
 # PHASE 1: BUILD COVISIBILITY GRAPH
