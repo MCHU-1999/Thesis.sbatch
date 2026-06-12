@@ -47,27 +47,27 @@ export APPTAINERENV_TRANSFORMERS_CACHE=${MY_STORAGE}/.cache/huggingface/hub
 
 echo "--- Job started ---"
 
-# srun apptainer exec \
-#     --nv \
-#     --containall \
-#     -B /tudelft.net/:/tudelft.net/ \
-#     --pwd ${REPO_PATH} \
-#     ${SIF_PATH} \
-#     /opt/conda/envs/planarSplatting/bin/python run_experiments_all_pexels.py
-
 srun apptainer exec \
     --nv \
     --containall \
     -B /tudelft.net/:/tudelft.net/ \
     --pwd ${REPO_PATH} \
     ${SIF_PATH} \
-    bash -lc "
-set -e
-echo 'Installing DA3...'
-/opt/conda/envs/planarSplatting/bin/pip install git+https://github.com/MCHU-1999/DA3.git
+    /opt/conda/envs/planarSplatting/bin/python run_experiments_all_pexels.py
 
-echo 'Running experiments on all scenes'
-/opt/conda/envs/planarSplatting/bin/python run_experiments_all_pexels.py
-"
+# srun apptainer exec \
+#     --nv \
+#     --containall \
+#     -B /tudelft.net/:/tudelft.net/ \
+#     --pwd ${REPO_PATH} \
+#     ${SIF_PATH} \
+#     bash -lc "
+# set -e
+# echo 'Installing DA3...'
+# /opt/conda/envs/planarSplatting/bin/pip install git+https://github.com/MCHU-1999/DA3.git
+
+# echo 'Running experiments on all scenes'
+# /opt/conda/envs/planarSplatting/bin/python run_experiments_all_pexels.py
+# "
 
 echo "--- Job finished ---"
