@@ -106,8 +106,8 @@ srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF
         --input_path ${DATA_PATH}/sparse/0 \
         --ref_images_path ${DATA_PATH}/da3_reference_locations.txt \
         --output_path ${DATA_PATH}/sparse_aligned \
-        --robust_alignment 1 \
-        --robust_alignment_max_error 0.1 \
+        --ref_is_gps 0 \
+        --alignment_max_error 0.1 \
         --transform_path ${DATA_PATH}/transform_matrix.txt
 
 # ==========================================
