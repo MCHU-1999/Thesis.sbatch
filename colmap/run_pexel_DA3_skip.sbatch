@@ -56,6 +56,7 @@ rm -f ${DATA_PATH}/da3_reference_locations.txt
 
 mkdir -p ${DATA_PATH}/dense
 mkdir -p ${DATA_PATH}/DA3_txt
+mkdir -p ${DATA_PATH}/sparse_aligned
 
 # ==========================================
 # PHASE 1.5: ALIGN TO DA3 COORDINATES
