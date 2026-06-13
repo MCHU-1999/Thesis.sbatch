@@ -4,7 +4,7 @@
 #SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
 #SBATCH --time=4:00:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
-#SBATCH --cpus-per-task=16   # Request number of CPUs (threads) per task.
+#SBATCH --cpus-per-task=8   # Request number of CPUs (threads) per task.
 #SBATCH --mem=32GB           # Request memory per node.
 #SBATCH --mail-type=END      # Set mail type to 'END' to receive a mail when the job finishes.
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
@@ -45,6 +45,14 @@ SIF_PATH=${MY_STORAGE}/containers/colmap.sif
 echo "--- Starting COLMAP Pipeline for: ${CURRENT_DATASET} ---"
 echo "Array Job ID: ${SLURM_ARRAY_JOB_ID} | Task ID: ${SLURM_ARRAY_TASK_ID}"
 echo "Data Path: ${DATA_PATH}"
+
+
+# Ensure base directories exist and are clean
+rm -rf ${DATA_PATH}/sparse
+rm -rf ${DATA_PATH}/dense
+rm -rf ${DATA_PATH}/sparse_fixed
+rm -rf ${DATA_PATH}/DA3_poses_only
+rm -f ${DATA_PATH}/database.db
 
 # Ensure base directories exist
 mkdir -p ${DATA_PATH}/sparse
