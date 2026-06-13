@@ -1,0 +1,114 @@
+#!/bin/sh
+
+#SBATCH --partition=general  # Request partition. Default is 'general'
+#SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
+#SBATCH --time=4:00:00       # Request run time (wall-clock) per job.
+#SBATCH --ntasks=1           # Request number of parallel tasks per job.
+#SBATCH --cpus-per-task=8   # Request number of CPUs (threads) per task.
+#SBATCH --mem=32GB           # Request memory per node.
+#SBATCH --mail-type=END      # Set mail type to 'END' to receive a mail when the job finishes.
+#SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
+
+# --- ARRAY CONFIGURATION ---
+# 0-8 creates exactly 9 jobs. 
+# %A is the master array job ID, %a is the specific task ID (0 to 8).
+#SBATCH --array=0-8
+#SBATCH --output=slurm_colmap_%A_%a.out
+#SBATCH --error=slurm_colmap_%A_%a.err
+
+# --- Environment Setup ---
+module purge
+module use /opt/insy/modulefiles
+set -e
+
+# --- Define Your 9 Folders Here ---
+DATASETS=(
+    "church-cadeby"
+    "church-chesterfield"
+    "killingbeck-cemetery"
+    "moskee-haarlem"
+    "tower-court"
+    "wotrubakirche"
+    "elbphilharmonie"
+    "krasna-horka-castle"
+    "clocktower"
+)
+
+# Fetch the dataset for this specific array task
+CURRENT_DATASET=${DATASETS[$SLURM_ARRAY_TASK_ID]}
+
+# --- Paths ---
+MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
+DATA_PATH=${MY_STORAGE}/Pexels/${CURRENT_DATASET}
+PY_PATH=${MY_STORAGE}/runs/colmap
+SIF_PATH=${MY_STORAGE}/containers/colmap.sif 
+SIF_PATH2=${MY_STORAGE}/containers/planarsplatting4.sif 
+
+echo "--- Starting COLMAP Alignment & MVS Pipeline for: ${CURRENT_DATASET} ---"
+
+# ---------------------------------------------------------
+# CRITICAL CLEANUP: Do NOT delete sparse or database.db here
+# ---------------------------------------------------------
+rm -rf ${DATA_PATH}/dense
+rm -rf ${DATA_PATH}/sparse_aligned
+rm -rf ${DATA_PATH}/DA3_txt
+rm -f ${DATA_PATH}/da3_reference_locations.txt
+
+mkdir -p ${DATA_PATH}/dense
+mkdir -p ${DATA_PATH}/DA3_txt
+
+# ==========================================
+# PHASE 1.5: ALIGN TO DA3 COORDINATES
+# ==========================================
+echo "[Align-1] Converting DA3 Binary to TXT..."
+srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
+    colmap model_converter \
+        --input_path ${DATA_PATH}/DA3_colmap \
+        --output_path ${DATA_PATH}/DA3_txt \
+        --output_type TXT
+
+echo "[Align-2] Calculating Camera Centers..."
+# This requires extract_centers.py to be in the same folder as this .sbatch script
+srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${PY_PATH} ${SIF_PATH2} \
+    python extract_centers.py \
+        ${DATA_PATH}/DA3_txt/images.txt \
+        ${DATA_PATH}/da3_reference_locations.txt
+
+echo "[Align-3] Applying Umeyama Similarity Transform..."
+srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
+    colmap model_aligner \
+        --input_path ${DATA_PATH}/sparse/0 \
+        --ref_images_path ${DATA_PATH}/da3_reference_locations.txt \
+        --output_path ${DATA_PATH}/sparse_aligned \
+        --robust_alignment 1 \
+        --robust_alignment_max_error 0.1 \
+        --transform_path ${DATA_PATH}/transform_matrix.txt
+
+# ==========================================
+# PHASE 2: DENSE RECONSTRUCTION (MVS)
+# ==========================================
+echo "[4/6] Image Undistortion..."
+srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
+    colmap image_undistorter \
+        --image_path ${DATA_PATH}/images \
+        --input_path ${DATA_PATH}/sparse_aligned \
+        --output_path ${DATA_PATH}/dense \
+        --output_type COLMAP
+
+echo "[5/6] Patch Match Stereo..."
+srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
+    colmap patch_match_stereo \
+        --workspace_path ${DATA_PATH}/dense \
+        --workspace_format COLMAP \
+        --PatchMatchStereo.geom_consistency true \
+        --PatchMatchStereo.max_image_size 1024
+
+echo "[6/6] Stereo Fusion..."
+srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
+    colmap stereo_fusion \
+        --workspace_path ${DATA_PATH}/dense \
+        --workspace_format COLMAP \
+        --input_type geometric \
+        --output_path ${DATA_PATH}/dense/fused.ply
+
+echo "--- COLMAP Alignment & MVS finished for: ${CURRENT_DATASET} ---"

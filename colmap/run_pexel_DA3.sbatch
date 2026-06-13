@@ -4,7 +4,7 @@
 #SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
 #SBATCH --time=4:00:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
-#SBATCH --cpus-per-task=16   # Request number of CPUs (threads) per task.
+#SBATCH --cpus-per-task=8   # Request number of CPUs (threads) per task.
 #SBATCH --mem=32GB           # Request memory per node.
 #SBATCH --mail-type=END      # Set mail type to 'END' to receive a mail when the job finishes.
 #SBATCH --gres=gpu:a40:1     # Request 1 GPU per task
@@ -19,6 +19,7 @@
 # --- Environment Setup ---
 module purge
 module use /opt/insy/modulefiles
+set -e
 
 # --- Define Your 9 Folders Here ---
 # Add the exact names of your 9 folders inside the parentheses, separated by spaces or newlines.
@@ -40,60 +41,74 @@ CURRENT_DATASET=${DATASETS[$SLURM_ARRAY_TASK_ID]}
 # --- Paths ---
 MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 DATA_PATH=${MY_STORAGE}/Pexels/${CURRENT_DATASET}
+PY_PATH=${MY_STORAGE}/runs/colmap
 SIF_PATH=${MY_STORAGE}/containers/colmap.sif 
+SIF_PATH2=${MY_STORAGE}/containers/planarsplatting4.sif 
 
 echo "--- Starting COLMAP Pipeline for: ${CURRENT_DATASET} ---"
 echo "Array Job ID: ${SLURM_ARRAY_JOB_ID} | Task ID: ${SLURM_ARRAY_TASK_ID}"
 echo "Data Path: ${DATA_PATH}"
 
 # Ensure base directories exist and are clean
+rm -rf ${DATA_PATH}/sparse
 rm -rf ${DATA_PATH}/dense
-rm -rf ${DATA_PATH}/sparse_fixed
-rm -rf ${DATA_PATH}/DA3_poses_only
+rm -rf ${DATA_PATH}/sparse_aligned
+rm -rf ${DATA_PATH}/DA3_txt
 rm -f ${DATA_PATH}/database.db
+rm -f ${DATA_PATH}/da3_reference_locations.txt
 
+# Ensure base directories exist
+mkdir -p ${DATA_PATH}/sparse
 mkdir -p ${DATA_PATH}/dense
-mkdir -p ${DATA_PATH}/sparse_fixed
-mkdir -p ${DATA_PATH}/DA3_poses_only
+mkdir -p ${DATA_PATH}/DA3_txt
 
 # ==========================================
-# PRE-PHASE: STRIP DA3 POINTS
-# ==========================================
-echo "[0/6] Converting DA3 Model and Stripping Points..."
-
-# 1. Convert the DA3 binary model to text format into our staging folder
-srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
-    colmap model_converter \
-        --input_path ${DATA_PATH}/DA3_colmap \
-        --output_path ${DATA_PATH}/DA3_poses_only \
-        --output_type TXT
-
-# 2. Completely empty the points3D.txt file to delete DA3's bad points
-> ${DATA_PATH}/DA3_poses_only/points3D.txt
-
-# ==========================================
-# PHASE 1: BUILD COVISIBILITY GRAPH
+# PHASE 1: SPARSE RECONSTRUCTION (SfM)
 # ==========================================
 echo "[1/6] Feature Extraction..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
     colmap feature_extractor \
         --database_path ${DATA_PATH}/database.db \
-        --image_path ${DATA_PATH}/images \
-        --ImageReader.camera_model PINHOLE
+        --image_path ${DATA_PATH}/images
 
 echo "[2/6] Feature Matching..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
     colmap sequential_matcher \
         --database_path ${DATA_PATH}/database.db
 
-echo "[3/6] Point Triangulation (Fixing DA3 Poses)..."
+echo "[3/6] Sparse Mapping..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
-    colmap point_triangulator \
+    colmap mapper \
         --database_path ${DATA_PATH}/database.db \
         --image_path ${DATA_PATH}/images \
-        --input_path ${DATA_PATH}/DA3_poses_only \
-        --output_path ${DATA_PATH}/sparse_fixed \
-        --clear_points 1
+        --output_path ${DATA_PATH}/sparse
+
+# ==========================================
+# PHASE 1.5: ALIGN TO DA3 COORDINATES
+# ==========================================
+echo "[Align-1] Converting DA3 Binary to TXT..."
+srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
+    colmap model_converter \
+        --input_path ${DATA_PATH}/DA3_colmap \
+        --output_path ${DATA_PATH}/DA3_txt \
+        --output_type TXT
+
+echo "[Align-2] Calculating Camera Centers..."
+# This requires extract_centers.py to be in the same folder as this .sbatch script
+srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${PY_PATH} ${SIF_PATH2} \
+    python extract_centers.py \
+        ${DATA_PATH}/DA3_txt/images.txt \
+        ${DATA_PATH}/da3_reference_locations.txt
+
+echo "[Align-3] Applying Umeyama Similarity Transform..."
+srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
+    colmap model_aligner \
+        --input_path ${DATA_PATH}/sparse/0 \
+        --ref_images_path ${DATA_PATH}/da3_reference_locations.txt \
+        --output_path ${DATA_PATH}/sparse_aligned \
+        --robust_alignment 1 \
+        --robust_alignment_max_error 0.1 \
+        --transform_path ${DATA_PATH}/transform_matrix.txt
 
 # ==========================================
 # PHASE 2: DENSE RECONSTRUCTION (MVS)
@@ -102,7 +117,7 @@ echo "[4/6] Image Undistortion..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
     colmap image_undistorter \
         --image_path ${DATA_PATH}/images \
-        --input_path ${DATA_PATH}/sparse_fixed \
+        --input_path ${DATA_PATH}/sparse_aligned \
         --output_path ${DATA_PATH}/dense \
         --output_type COLMAP
 
