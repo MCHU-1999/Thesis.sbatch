@@ -2,7 +2,7 @@
 
 #SBATCH --partition=general  # Request partition. Default is 'general'
 #SBATCH --qos=short          # Request Quality of Service. Default is 'short' (maximum run time: 4 hours)
-#SBATCH --time=0:40:00       # Request run time (wall-clock) per job.
+#SBATCH --time=2:00:00       # Request run time (wall-clock) per job.
 #SBATCH --ntasks=1           # Request number of parallel tasks per job.
 #SBATCH --cpus-per-task=8    # Request number of CPUs (threads) per task.
 #SBATCH --mem=32GB           # Request memory per node.
