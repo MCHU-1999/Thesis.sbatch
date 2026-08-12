@@ -66,7 +66,8 @@ srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF
     colmap feature_extractor \
         --database_path ${DATA_PATH}/database.db \
         --image_path ${DATA_PATH}/images \
-        --ImageReader.camera_model PINHOLE
+        --ImageReader.camera_model PINHOLE \
+        --ImageReader.single_camera 1
 
 echo "[2/4] Feature Matching..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
