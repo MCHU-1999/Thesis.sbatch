@@ -65,7 +65,8 @@ echo "[1/4] Feature Extraction..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
     colmap feature_extractor \
         --database_path ${DATA_PATH}/database.db \
-        --image_path ${DATA_PATH}/images
+        --image_path ${DATA_PATH}/images \
+        --ImageReader.camera_model PINHOLE
 
 echo "[2/4] Feature Matching..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
@@ -93,7 +94,7 @@ srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF
 # ==========================================
 # PHASE 2: DENSE RECONSTRUCTION (MVS)
 # ==========================================
-echo "[4/6] Image Undistortion..."
+echo "[1/3] Image Undistortion..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
     colmap image_undistorter \
         --image_path ${DATA_PATH}/images \
@@ -101,7 +102,7 @@ srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF
         --output_path ${DATA_PATH}/dense \
         --output_type COLMAP
 
-echo "[5/6] Patch Match Stereo..."
+echo "[2/3] Patch Match Stereo..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
     colmap patch_match_stereo \
         --workspace_path ${DATA_PATH}/dense \
@@ -109,7 +110,7 @@ srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF
         --PatchMatchStereo.geom_consistency true \
         --PatchMatchStereo.max_image_size 1024
 
-echo "[6/6] Stereo Fusion..."
+echo "[3/3] Stereo Fusion..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
     colmap stereo_fusion \
         --workspace_path ${DATA_PATH}/dense \
