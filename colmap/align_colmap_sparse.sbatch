@@ -21,8 +21,8 @@ module purge
 module use /opt/insy/modulefiles
 set -e
 
-# --- Define Your 9 Folders Here ---
-# Add the exact names of your 9 folders inside the parentheses, separated by spaces or newlines.
+# --- Define Your Folders Here ---
+# Add the exact names of your folders inside the parentheses, separated by spaces or newlines.
 DATASETS=(
     "Barn-sparse25"
     "Barn-sparse50"
@@ -39,63 +39,68 @@ MY_STORAGE=/tudelft.net/staff-umbrella/Deep3D/mingchiehhu
 DATA_PATH=${MY_STORAGE}/TNT_GOF/TrainingSet/${CURRENT_DATASET}
 PY_PATH=${MY_STORAGE}/runs/colmap
 SIF_PATH=${MY_STORAGE}/containers/colmap.sif 
+SIF_PATH2=${MY_STORAGE}/containers/planarsplatting4.sif 
 
 echo "--- Starting COLMAP Pipeline for: ${CURRENT_DATASET} ---"
 echo "Array Job ID: ${SLURM_ARRAY_JOB_ID} | Task ID: ${SLURM_ARRAY_TASK_ID}"
 echo "Data Path: ${DATA_PATH}"
 
 # Ensure base directories exist and are clean
+rm -rf ${DATA_PATH}/sparse
 rm -rf ${DATA_PATH}/dense
-rm -rf ${DATA_PATH}/sparse_triangulated
 rm -rf ${DATA_PATH}/sparse_aligned
 rm -f ${DATA_PATH}/database.db
+rm -f ${DATA_PATH}/reference_locations.txt
 
 # Ensure base directories exist
 mkdir -p ${DATA_PATH}/dense
-mkdir -p ${DATA_PATH}/sparse_triangulated
 mkdir -p ${DATA_PATH}/sparse_aligned
 
-# Ensure the mandatory third file exists, even if empty
-touch ${DATA_PATH}/sparse/0/points3D.txt
-
 # ==========================================
-# PHASE 1: INITIALIZED SPARSE RECONSTRUCTION
+# PHASE 1: SPARSE RECONSTRUCTION (SfM)
 # ==========================================
-echo "[1/4] Feature Extraction..."
+echo "[1/6] Feature Extraction..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
     colmap feature_extractor \
         --database_path ${DATA_PATH}/database.db \
-        --image_path ${DATA_PATH}/images \
-        --ImageReader.camera_model PINHOLE \
-        --ImageReader.single_camera 1
+        --image_path ${DATA_PATH}/images
 
-echo "[2/4] Feature Matching..."
+echo "[2/6] Feature Matching..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
-    colmap exhaustive_matcher \
+    colmap sequential_matcher \
         --database_path ${DATA_PATH}/database.db
 
-echo "[3/4] Point Triangulation..."
+echo "[3/6] Sparse Mapping..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
-    colmap point_triangulator \
+    colmap mapper \
         --database_path ${DATA_PATH}/database.db \
         --image_path ${DATA_PATH}/images \
-        --input_path ${DATA_PATH}/sparse/0 \
-        --output_path ${DATA_PATH}/sparse_triangulated
+        --output_path ${DATA_PATH}/sparse
 
-echo "[4/4] Bundle Adjustment (Locking Known Poses)..."
+# ==========================================
+# PHASE 1.5: ALIGN TO GT COORDINATES
+# ==========================================
+echo "[Align-1] Calculating Camera Centers..."
+# This requires extract_centers.py to be in the same folder as this .sbatch script
+srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${PY_PATH} ${SIF_PATH2} \
+    python extract_centers.py \
+        ${DATA_PATH}/sparse_gt/0/images.txt \
+        ${DATA_PATH}/reference_locations.txt
+
+echo "[Align-2] Applying Umeyama Similarity Transform..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
-    colmap bundle_adjuster \
-        --input_path ${DATA_PATH}/sparse_triangulated \
+    colmap model_aligner \
+        --input_path ${DATA_PATH}/sparse/0 \
+        --ref_images_path ${DATA_PATH}/reference_locations.txt \
         --output_path ${DATA_PATH}/sparse_aligned \
-        --BundleAdjustment.refine_focal_length 0 \
-        --BundleAdjustment.refine_principal_point 0 \
-        --BundleAdjustment.refine_extra_params 0 \
-        --BundleAdjustment.refine_extrinsics 0
+        --ref_is_gps 0 \
+        --alignment_max_error 0.1 \
+        --transform_path ${DATA_PATH}/transform_matrix.txt
 
 # ==========================================
 # PHASE 2: DENSE RECONSTRUCTION (MVS)
 # ==========================================
-echo "[1/3] Image Undistortion..."
+echo "[4/6] Image Undistortion..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
     colmap image_undistorter \
         --image_path ${DATA_PATH}/images \
@@ -103,7 +108,7 @@ srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF
         --output_path ${DATA_PATH}/dense \
         --output_type COLMAP
 
-echo "[2/3] Patch Match Stereo..."
+echo "[5/6] Patch Match Stereo..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
     colmap patch_match_stereo \
         --workspace_path ${DATA_PATH}/dense \
@@ -111,7 +116,7 @@ srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF
         --PatchMatchStereo.geom_consistency true \
         --PatchMatchStereo.max_image_size 1024
 
-echo "[3/3] Stereo Fusion..."
+echo "[6/6] Stereo Fusion..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
     colmap stereo_fusion \
         --workspace_path ${DATA_PATH}/dense \
