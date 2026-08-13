@@ -69,7 +69,7 @@ srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF
 
 echo "[2/6] Feature Matching..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
-    colmap sequential_matcher \
+    colmap exhaustive_matcher \
         --database_path ${DATA_PATH}/database.db
 
 echo "[3/6] Sparse Mapping..."
