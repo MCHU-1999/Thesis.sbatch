@@ -46,15 +46,10 @@ echo "Array Job ID: ${SLURM_ARRAY_JOB_ID} | Task ID: ${SLURM_ARRAY_TASK_ID}"
 echo "Data Path: ${DATA_PATH}"
 
 # Ensure base directories exist and are clean
-rm -rf ${DATA_PATH}/sparse
-rm -rf ${DATA_PATH}/dense
-rm -rf ${DATA_PATH}/sparse_aligned
-rm -f ${DATA_PATH}/database.db
 rm -f ${DATA_PATH}/reference_locations.txt
 
 # Ensure base directories exist
-mkdir -p ${DATA_PATH}/dense
-mkdir -p ${DATA_PATH}/sparse_aligned
+mkdir -p ${DATA_PATH}/DA3_aligned
 
 # ==========================================
 # PHASE 1.5: ALIGN TO GT COORDINATES
@@ -69,9 +64,9 @@ srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${PY_PATH} ${SIF_P
 echo "[Align-2] Applying Umeyama Similarity Transform..."
 srun apptainer exec --nv -B /tudelft.net/:/tudelft.net/ --pwd ${DATA_PATH} ${SIF_PATH} \
     colmap model_aligner \
-        --input_path ${DATA_PATH}/sparse/0 \
+        --input_path ${DATA_PATH}/DA3_colmap \
         --ref_images_path ${DATA_PATH}/reference_locations.txt \
-        --output_path ${DATA_PATH}/sparse_aligned \
+        --output_path ${DATA_PATH}/DA3_aligned \
         --ref_is_gps 0 \
         --alignment_max_error 0.1 \
         --transform_path ${DATA_PATH}/transform_matrix.txt

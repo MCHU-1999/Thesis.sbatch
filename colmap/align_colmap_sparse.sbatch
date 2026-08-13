@@ -49,10 +49,12 @@ echo "Data Path: ${DATA_PATH}"
 rm -rf ${DATA_PATH}/sparse
 rm -rf ${DATA_PATH}/dense
 rm -rf ${DATA_PATH}/sparse_aligned
+rm -rf ${DATA_PATH}/sparse_triangulated
 rm -f ${DATA_PATH}/database.db
 rm -f ${DATA_PATH}/reference_locations.txt
 
 # Ensure base directories exist
+mkdir -p ${DATA_PATH}/sparse
 mkdir -p ${DATA_PATH}/dense
 mkdir -p ${DATA_PATH}/sparse_aligned
 
